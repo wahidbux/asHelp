@@ -10,20 +10,37 @@ import { supabase } from "@/lib/supabaseclient"; // Import your Supabase client
 export default function SignupFormDemo() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMsg("");
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      if (error) throw error;
-      console.log("User signed up:", data.user);
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Signup error:", error);
+      if (isSignUp) {
+        if (password !== confirmPassword) {
+          setErrorMsg("Passwords do not match");
+          return;
+        }
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (error) throw error;
+        router.push("/dashboard");
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        router.push("/dashboard");
+      }
+    } catch (error: any) {
+      setErrorMsg(error.message || "An error occurred");
+      console.error("Auth error:", error);
     }
   };
 
@@ -43,7 +60,7 @@ export default function SignupFormDemo() {
   };
 
   return (
-    <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+    <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-neutral-50 p-4 md:rounded-2xl md:p-8 dark:bg-black">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Welcome to Asshelp
       </h2>
@@ -74,21 +91,27 @@ export default function SignupFormDemo() {
             required
           />
         </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="twitterpassword">Confirm password</Label>
-          <Input
-            id="twitterpassword"
-            placeholder="••••••••"
-            type="password"
-            // You can add confirm password logic if needed
-          />
-        </LabelInputContainer>
-
+        {isSignUp && (
+          <LabelInputContainer className="mb-8">
+            <Label htmlFor="confirmpassword">Confirm password</Label>
+            <Input
+              id="confirmpassword"
+              placeholder="••••••••"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </LabelInputContainer>
+        )}
+        {errorMsg && (
+          <div className="mb-4 text-sm text-red-500">{errorMsg}</div>
+        )}
         <button
           className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] mb-4"
           type="submit"
         >
-          Sign up &rarr;
+          {isSignUp ? "Sign up →" : "Sign in →"}
           <BottomGradient />
         </button>
         <button
@@ -102,6 +125,29 @@ export default function SignupFormDemo() {
           </span>
           <BottomGradient />
         </button>
+        <div className="mt-4 text-center text-sm text-neutral-600 dark:text-neutral-300">
+          {isSignUp ? (
+            <>Already a user?{' '}
+              <button
+                type="button"
+                className="text-blue-600 hover:underline focus:outline-none"
+                onClick={() => setIsSignUp(false)}
+              >
+                Sign in
+              </button>
+            </>
+          ) : (
+            <>New user?{' '}
+              <button
+                type="button"
+                className="text-blue-600 hover:underline focus:outline-none"
+                onClick={() => setIsSignUp(true)}
+              >
+                Sign up
+              </button>
+            </>
+          )}
+        </div>
       </form>
     </div>
   );

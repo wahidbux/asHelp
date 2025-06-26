@@ -51,10 +51,10 @@ const FormPa = () => {
     async function uploadFile(file: File) {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
-      const { data, error } = await supabase.storage.from('assignments').upload(fileName, file);
+      const { data, error } = await supabase.storage.from('uploads').upload(fileName, file);
       if (error) throw error;
       // Get public URL
-      const { data: publicUrlData } = supabase.storage.from('assignments').getPublicUrl(fileName);
+      const { data: publicUrlData } = supabase.storage.from('uploads').getPublicUrl(fileName);
       return publicUrlData.publicUrl;
     }
   

@@ -1,50 +1,48 @@
 'use client';
+import React from "react";
+import { useRouter } from "next/navigation";
 
-import React from 'react';
-
-interface GradientGlowButtonProps {
-  label?: string;
-  href?: string;
-}
-
-const GradientGlowButton: React.FC<GradientGlowButtonProps> = ({
-  label = 'Get Started For Free',
-  href = '#',
-}) => {
+const TailwindConnectButton = ({ children = null, ...props }: React.PropsWithChildren<{}>) => {
+  const router = useRouter();
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('TailwindConnectButton clicked');
+    e.preventDefault();
+    router.push('/sign');
+  };
   return (
-    <div className="relative inline-flex items-center justify-center gap-4 group">
-      {/* Background Glow */}
-      <div className="absolute inset-0 transition-all duration-[1000ms] opacity-60 bg-gradient-to-r from-indigo-500 via-pink-500 to-yellow-400 rounded-xl blur-lg filter group-hover:opacity-100 group-hover:duration-200" />
-      
-      {/* Button */}
-      <a
-        href={href}
-        role="button"
-        title={label}
-        className="group relative inline-flex items-center justify-center text-base rounded-xl bg-gray-900 px-8 py-3 font-semibold text-white transition-all duration-200 hover:bg-gray-800 hover:shadow-lg hover:-translate-y-0.5 hover:shadow-gray-600/30"
-      >
-        {label}
-        {/* Arrow Icon */}
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 10 10"
-          height="10"
-          width="10"
-          fill="none"
-          className="ml-2 -mr-1 mt-0.5 stroke-white stroke-2"
-        >
-          <path
-            d="M0 5h7"
-            className="transition-opacity opacity-0 group-hover:opacity-100"
-          ></path>
-          <path
-            d="M1 1l4 4-4 4"
-            className="transition-transform group-hover:translate-x-[3px]"
-          ></path>
-        </svg>
-      </a>
-    </div>
+    <button
+      className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block"
+      onClick={handleClick}
+      {...props}
+    >
+      <span className="absolute inset-0 overflow-hidden rounded-full">
+        <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      </span>
+      <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
+        {children || (
+          <>
+            <span>Get started</span>
+            <svg
+              fill="none"
+              height="16"
+              viewBox="0 0 24 24"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.75 8.75L14.25 12L10.75 15.25"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </>
+        )}
+      </div>
+      <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40" />
+    </button>
   );
 };
 
-export default GradientGlowButton;
+export default TailwindConnectButton;

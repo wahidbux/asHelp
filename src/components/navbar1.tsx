@@ -13,7 +13,9 @@ const Navbar = () => {
         
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <Image src="/home.svg" alt="Logo" width={24} height={24} />
+          <Link href="/">
+            <Image src="/logo.svg" alt="Logo" width={40} height={40} />
+          </Link>
         </div>
 
         {/* Desktop Nav Links */}
