@@ -193,8 +193,24 @@ const AcademicHub = () => {
                   </span>
                 </div>
 
-                <div className="h-32 bg-slate-700/50 rounded-xl mb-4 flex items-center justify-center">
-                  <div className="w-12 h-12 bg-slate-600 rounded-lg opacity-50"></div>
+                <div className="w-full aspect-square bg-slate-700/50 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                  {project.id === 1 && (
+                    <img
+                      src="/img1.png"
+                      alt="Assignment"
+                      className="w-full h-full object-contain rounded-xl"
+                    />
+                  )}
+                  {project.id === 2 && (
+                    <img
+                      src="/img2.png"
+                      alt="Termwork"
+                      className="w-full h-full object-contain rounded-xl"
+                    />
+                  )}
+                  {project.id !== 1 && project.id !== 2 && (
+                    <div className="w-12 h-12 bg-slate-600 rounded-lg opacity-50"></div>
+                  )}
                 </div>
 
                 <div className="mb-3">
