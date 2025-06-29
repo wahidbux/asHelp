@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabaseclient';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/animate-ui/radix/checkbox';
 import { Counter } from '@/components/animate-ui/components/counter';
+import { PayButton } from '@/components/paybutton'
 
 const FormPa = () => {
     const [step, setStep] = useState(1);
@@ -120,6 +121,16 @@ const FormPa = () => {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [step]);
+  
+    // Dummy payment handler for PayButton
+    const proceedToPayment = (amount: string) => {
+      alert(`Proceeding to payment of $${amount}`);
+    };
+  
+    // Calculate final amount for PayButton
+    const baseAmount = 100;
+    const extraPages = termsChecked ? counterNumber : 0;
+    const finalAmount = (baseAmount + extraPages * 5).toFixed(2);
   
     return (
       <div className="min-h-screen w-full relative bg-black text-white">
@@ -351,9 +362,27 @@ const FormPa = () => {
                   />
                 </div>
                 
-                <div className="pt-4 text-gray-300">
-                  <p><span className="font-bold text-white">Project Type:</span> Assignment</p>
-                  <p><span className="font-bold text-white">Number of Pages:</span> 10</p>
+                <div className="pt-4 flex gap-6">
+                  {/* Project Type Card */}
+                  <div className="flex-1 bg-[#18181b] rounded-xl flex items-center gap-4 p-5 min-w-[220px]">
+                    <div className="bg-[#23232a] rounded-lg p-3 flex items-center justify-center">
+                      <FileText size={32} className="text-blue-400" />
+                    </div>
+                    <div>
+                      <div className="text-gray-300 text-sm">Project Type</div>
+                      <div className="text-white text-lg font-semibold">Assignment</div>
+                    </div>
+                  </div>
+                  {/* Number of Pages Card */}
+                  <div className="flex-1 bg-[#18181b] rounded-xl flex items-center gap-4 p-5 min-w-[220px]">
+                    <div className="bg-[#23232a] rounded-lg p-3 flex items-center justify-center">
+                      <span className="text-green-400 text-2xl font-bold">#</span>
+                    </div>
+                    <div>
+                      <div className="text-gray-300 text-sm">Number of Pages</div>
+                      <div className="text-white text-lg font-semibold">10</div>
+                    </div>
+                  </div>
                 </div>
   
                 {/* Terms and Conditions Checkbox */}
@@ -503,49 +532,63 @@ const FormPa = () => {
           {/* Step 4: Payment Section */}
           {step === 4 && (
             <div className="bg-black/80 backdrop-blur-lg rounded-xl mt-10 p-8 w-full max-w-2xl shadow-xl flex flex-col items-center">
-              <BlurText
-                text={window.innerWidth < 768 ? "Payment" : "Payment Section"}
-                delay={150}
-                animateBy="words"
-                direction="top"
-                className="text-lg md:text-xl font-semibold mb-1 text-white text-center"
-              />
-              <p className="text-xs md:text-sm text-gray-300 mb-4 md:mb-6 text-center">Step 4 of 4</p>
-              <div className="radio-input flex flex-col gap-2 items-center w-full mt-8">
-                <label className={`label flex items-center gap-4 px-5 w-[220px] cursor-pointer h-[50px] relative ${paymentMethod === 'cod' ? 'z-10' : ''}`}
-                  style={{}}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="cod"
-                    checked={paymentMethod === 'cod'}
-                    onChange={() => setPaymentMethod('cod')}
-                    className="appearance-none w-[17px] h-[17px] rounded-full flex justify-center items-center bg-[#202030] checked:bg-[#435dd8] relative transition-colors duration-300 before:content-[''] before:w-[6px] before:h-[6px] before:rounded-full before:bg-white before:scale-0 checked:before:scale-100 before:transition-transform before:duration-100"
-                    style={{ outline: 'none' }}
-                  />
-                  <p className="text text-white font-semibold">Cash on Delivery (COD)</p>
-                  <span className={`absolute inset-0 w-full h-[45px] rounded-[10px] border-2 border-transparent -z-10 transition-all duration-300 ${paymentMethod === 'cod' ? 'bg-[#2d3750] border-[#435dd8] h-[50px]' : ''} group-hover:bg-[#2a2e3c]`}></span>
-                </label>
-                <label className={`label flex items-center gap-4 px-5 w-[220px] cursor-pointer h-[50px] relative ${paymentMethod === 'razorpay' ? 'z-10' : ''}`}
-                  style={{}}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="razorpay"
-                    checked={paymentMethod === 'razorpay'}
-                    onChange={() => setPaymentMethod('razorpay')}
-                    className="appearance-none w-[17px] h-[17px] rounded-full flex justify-center items-center bg-[#202030] checked:bg-[#435dd8] relative transition-colors duration-300 before:content-[''] before:w-[6px] before:h-[6px] before:rounded-full before:bg-white before:scale-0 checked:before:scale-100 before:transition-transform before:duration-100"
-                    style={{ outline: 'none' }}
-                  />
-                  <p className="text text-white font-semibold">Razorpay</p>
-                  <span className={`absolute inset-0 w-full h-[45px] rounded-[10px] border-2 border-transparent -z-10 transition-all duration-300 ${paymentMethod === 'razorpay' ? 'bg-[#2d3750] border-[#435dd8] h-[50px]' : ''} group-hover:bg-[#2a2e3c]`}></span>
-                </label>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 text-center">Billing Summary</h2>
+              <p className="text-sm text-gray-300 mb-6 text-center">Review your charges before proceeding to payment</p>
+              <div className="w-full bg-[#18181b] rounded-xl shadow-lg p-6 md:p-8 mb-6 flex flex-col gap-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl">🧾</span>
+                  <span className="text-lg font-semibold text-white">Order Details</span>
+                </div>
+                <div className="text-xs text-gray-400 mb-4">Invoice #INV-2024-001234 &bull; Due: January 15, 2024</div>
+                <div className="flex justify-between items-center text-white font-medium">
+                  <span>Premium Subscription <span className="bg-gray-700 text-xs rounded px-2 py-0.5 ml-1">Monthly</span></span>
+                  <span>$29.99</span>
+                </div>
+                <div className="flex justify-between items-center text-white">
+                  <span>Additional Storage <span className="bg-gray-700 text-xs rounded px-2 py-0.5 ml-1">50GB</span></span>
+                  <span>$9.98</span>
+                </div>
+                <div className="flex justify-between items-center text-white">
+                  <span>Priority Support <span className="bg-gray-700 text-xs rounded px-2 py-0.5 ml-1">Monthly</span></span>
+                  <span>$9.99</span>
+                </div>
+                <hr className="my-2 border-gray-700" />
+                <div className="flex justify-between text-gray-300 text-sm">
+                  <span>Subtotal</span>
+                  <span>$49.96</span>
+                </div>
+                <div className="flex justify-between text-gray-300 text-sm">
+                  <span>Tax (8%)</span>
+                  <span>$4.00</span>
+                </div>
+                <div className="flex justify-between text-gray-300 text-sm mb-2">
+                  <span>Processing Fee</span>
+                  <span>$2.50</span>
+                </div>
+                <div className="flex justify-between items-center text-lg font-bold text-white mt-2">
+                  <span>Total</span>
+                  <span>$56.46</span>
+                </div>
               </div>
-              {loading && <p className="text-blue-400 mt-4">Submitting your assignment...</p>}
-              {error && <p className="text-red-400 mt-4">{error}</p>}
-              {success && <p className="text-green-400 mt-4">Assignment submitted successfully!</p>}
+              {/* Show PayButton on desktop/tablet, default button on mobile */}
+              <div className="w-full">
+                <div className="hidden md:block">
+                  <PayButton
+                    amount={finalAmount}
+                    onClick={() => proceedToPayment(finalAmount)}
+                  />
+                </div>
+                <div className="block md:hidden">
+                  <button className="w-full bg-white text-black font-semibold py-2 rounded-lg text-base transition hover:bg-gray-200 mb-3 flex items-center justify-center gap-2">
+                   
+                    <span>Proceed to Pay&nbsp;${finalAmount}</span>
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-400 mt-2">
+                <span className="material-icons text-base">lock</span>
+                Secured by 256-bit SSL encryption
+              </div>
             </div>
           )}
         </div>
