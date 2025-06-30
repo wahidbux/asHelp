@@ -18,7 +18,9 @@ import { useRouter } from "next/navigation";
 import { MarqueeDemo } from "@/components/marqueewrap";
 import TestimonialMarquee from "@/components/mwrap"
 import { NavbarDemo } from "@/components/nav";
+import { PaymentOptionsOverlay } from '@/components/payment'
 
+/*
 export default function BackgroundBoxesDemo() {
   const [scrollY, setScrollY] = useState(0);
   const router = useRouter();
@@ -37,7 +39,7 @@ export default function BackgroundBoxesDemo() {
     <div className="relative bg-slate-900">
       <NavbarDemo />
       
-      {/* Aurora as background */}
+      {/* Aurora as background *//*}
       <div className="fixed inset-0 z-0">
         <Aurora
           colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
@@ -47,7 +49,7 @@ export default function BackgroundBoxesDemo() {
         />
       </div>
       
-      {/* Main content centered - positioned fixed to stay in center */}
+      {/* Main content centered - positioned fixed to stay in center *//*}
       <div 
         className="fixed inset-0 z-20 flex flex-col items-center justify-center transition-all duration-500 ease-in-out"
         style={{
@@ -82,7 +84,7 @@ export default function BackgroundBoxesDemo() {
       <br/>
       <br/>
       
-      {/* ContainerScroll in normal document flow for scrolling */}
+      {/* ContainerScroll in normal document flow for scrolling *//*}
       <div className="relative z-10">
         <ContainerScroll
           titleComponent={
@@ -111,5 +113,12 @@ export default function BackgroundBoxesDemo() {
     </div>
   );
 }
-
+*/
+export default function HomePage() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <PaymentOptionsOverlay />
+    </main>
+  );
+}
 
