@@ -2,11 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Boxes } from "@/components/ui/background-boxes";
 import { cn } from "@/lib/utils";
-import VariableProximity from "@/components/VariableProximity";
-import GradientGlowButton from '@/components/button';
-import Navbar from '@/components/navbar1';
 import Button2 from '@/components/button2';
-import Particles from '@/components/Backgrounds/Particles';
 import { User, FileText, UploadCloud, CreditCard } from 'lucide-react';
 import Upload from '@/components/upload';
 import Aurora from '@/components/Backgrounds/Aurora';
@@ -15,31 +11,65 @@ import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import TailwindConnectButton from "@/components/button";
 import { useRouter } from "next/navigation";
-import { MarqueeDemo } from "@/components/marqueewrap";
 import TestimonialMarquee from "@/components/mwrap"
 import { NavbarDemo } from "@/components/nav";
-import { PaymentOptionsOverlay } from '@/components/payment'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-/*
+
+
 export default function BackgroundBoxesDemo() {
   const [scrollY, setScrollY] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setMounted(true);
+    
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mounted) return;
+    
+    // Simulate loading time for components
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 4000); // Show loader for 4 seconds to see the animation properly
+
+    return () => clearTimeout(timer);
+  }, [mounted]);
+
   // Hide main content after scrolling 100px
   const mainContentOpacity = scrollY > 100 ? 0 : 1;
   const mainContentTransform = scrollY > 100 ? 'translateY(-50px)' : 'translateY(0)';
 
+  // Don't render anything until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <div className="relative bg-slate-900">
+      {/* Loading Screen */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900">
+          <div className="flex flex-col items-center gap-4">
+            <DotLottieReact
+              src="https://lottie.host/184e3f2e-31ad-4bfd-9ea2-5bc8650cf1c9/dBlK14bVkG.lottie"
+              loop
+              autoplay
+            />
+            <p className="text-white text-lg font-medium">Loading...</p>
+          </div>
+        </div>
+      )}
+
       <NavbarDemo />
       
-      {/* Aurora as background *//*}
+      {/* Aurora as background */}
       <div className="fixed inset-0 z-0">
         <Aurora
           colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
@@ -49,50 +79,55 @@ export default function BackgroundBoxesDemo() {
         />
       </div>
       
-      {/* Main content centered - positioned fixed to stay in center *//*}
+      {/* Main content centered - positioned fixed to stay in center */}
       <div 
-        className="fixed inset-0 z-20 flex flex-col items-center justify-center transition-all duration-500 ease-in-out"
+        className={`fixed inset-0 z-20 flex flex-col items-center justify-center transition-all duration-500 ease-in-out ${
+          isLoading ? 'opacity-0' : 'opacity-100'
+        }`}
         style={{
-          opacity: mainContentOpacity,
+          opacity: isLoading ? 0 : mainContentOpacity,
           transform: mainContentTransform
         }}
       >
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 px-4 max-w-3xl mx-auto text-center sm:text-left">
-          <h1 className="text-3xl sm:text-6xl font-sans text-white font-semibold">Want help in</h1>
-          <div className="mt-2 sm:mt-0">
+        {/* Hero Section Layout Fix */}
+        <div className="flex flex-col items-center justify-center gap-4 px-4 max-w-3xl mx-auto text-center">
+          {/* Button Row */}
+          <button className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gray-100 text-black font-normal text-sm shadow-sm border border-gray-200 hover:bg-gray-200 transition-all mb-2">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="text-black"><path d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M6.05 17.95l-1.414 1.414m12.728 0l-1.414-1.414M6.05 6.05L4.636 4.636" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M8 12a4 4 0 108 0 4 4 0 00-8 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            Discover Genuine Solutions
+          </button>
+          {/* Heading + Flip Row */}
+          <div className="flex flex-row flex-wrap items-center justify-center gap-1 w-full">
+            <h1 className="text-2xl xs:text-4xl sm:text-6xl md:text-7xl font-sans text-white font-semibold whitespace-nowrap">
+              Want help in
+            </h1>
             <ContainerTextFlip
               words={["Projects", "assignments", "Termwork", "PPT"]}
-              className="text-2xl sm:text-4xl"
+              className="text-lg xs:text-xl sm:text-2xl md:text-4xl ml-1 whitespace-nowrap"
             />
+          </div>
+          {/* Description Row */}
+          <div className="mt-2 text-gray-400 text-xs sm:text-lg max-w-xl">
+            Get professional assignment writing services from verified experts. 100% AI-free, plagiarism-free content.
           </div>
         </div>
         <div className="flex flex-col items-center mt-6 sm:mt-8 w-full px-4">
           <TailwindConnectButton />
         </div>
       </div>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
       
-      {/* ContainerScroll in normal document flow for scrolling *//*}
-      <div className="relative z-10">
+      {/* Spacer div to replace the br tags */}
+      <div className="h-screen"></div>
+      
+      {/* ContainerScroll in normal document flow for scrolling */}
+      <div className={`relative z-10 transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
         <ContainerScroll
           titleComponent={
             <>
               <h2 className="text-4xl font-semibold text-black dark:text-white">
                 
                 <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
-                  Order now !
+                  
                 </span>
               </h2>
             </>
@@ -113,12 +148,3 @@ export default function BackgroundBoxesDemo() {
     </div>
   );
 }
-*/
-export default function HomePage() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <PaymentOptionsOverlay />
-    </main>
-  );
-}
-

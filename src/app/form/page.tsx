@@ -14,8 +14,10 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/animate-ui/radix/checkbox';
 import { Counter } from '@/components/animate-ui/components/counter';
 import { PayButton } from '@/components/paybutton'
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const FormPa = () => {
+    const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -46,6 +48,11 @@ const FormPa = () => {
     const allFilled = firstName && lastName && email && phone;
     const step2AllFilled = subject && course && branch && semester;
     const step3AllFilled = mainFile; // Assuming at least the main file is required
+  
+    const router = useRouter();
+  
+    const noOfPage = Number(searchParams.get('noOfPage')) || 10;
+    const totalAmount = Number(searchParams.get('totalAmount')) || 100;
   
     const handleFileChange =
       (setter: React.Dispatch<React.SetStateAction<File | null>>) =>
@@ -93,8 +100,8 @@ const FormPa = () => {
             file_url: fileUrl,
             branch,
             semester,
-            'no.of.page': 10, // constant
-            total_amount: 100, // constant
+            'no.of.page': noOfPage,
+            total_amount: totalAmount,
             user_id: user.id,
           }
         ]);
@@ -122,13 +129,18 @@ const FormPa = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [step]);
   
-    // Dummy payment handler for PayButton
+    // Replace this function:
+    // const proceedToPayment = (amount: string) => {
+    //   alert(`Proceeding to payment of $${amount}`);
+    // };
+  
+    // With this:
     const proceedToPayment = (amount: string) => {
-      alert(`Proceeding to payment of $${amount}`);
+      router.push(`/payment?amount=${amount}`);
     };
   
     // Calculate final amount for PayButton
-    const baseAmount = 100;
+    const baseAmount = totalAmount;
     const extraPages = termsChecked ? counterNumber : 0;
     const finalAmount = (baseAmount + extraPages * 5).toFixed(2);
   
@@ -380,7 +392,7 @@ const FormPa = () => {
                     </div>
                     <div>
                       <div className="text-gray-300 text-sm">Number of Pages</div>
-                      <div className="text-white text-lg font-semibold">10</div>
+                      <div className="text-white text-lg font-semibold">{noOfPage}</div>
                     </div>
                   </div>
                 </div>
@@ -579,8 +591,10 @@ const FormPa = () => {
                   />
                 </div>
                 <div className="block md:hidden">
-                  <button className="w-full bg-white text-black font-semibold py-2 rounded-lg text-base transition hover:bg-gray-200 mb-3 flex items-center justify-center gap-2">
-                   
+                  <button
+                    className="w-full bg-white text-black font-semibold py-2 rounded-lg text-base transition hover:bg-gray-200 mb-3 flex items-center justify-center gap-2"
+                    onClick={() => proceedToPayment(finalAmount)}
+                  >
                     <span>Proceed to Pay&nbsp;${finalAmount}</span>
                   </button>
                 </div>
