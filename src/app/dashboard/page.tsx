@@ -1,14 +1,30 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, User, Menu, X, Star, Clock, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { NavbarDemo } from "@/components/nav";
-
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 
 const AcademicHub = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [mounted]);
+
+  if (!mounted) return null;
 
   const featuredProjects = [
     {
@@ -69,7 +85,21 @@ const AcademicHub = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-y-auto">
-      <NavbarDemo />
+      {/* Loading Screen */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900">
+          <div className="flex flex-col items-center gap-4">
+            <DotLottieReact
+              src="https://lottie.host/184e3f2e-31ad-4bfd-9ea2-5bc8650cf1c9/dBlK14bVkG.lottie"
+              loop
+              autoplay
+            />
+            <p className="text-white text-lg font-medium">Loading...</p>
+          </div>
+        </div>
+      )}
+      <div className={isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}>
+        <NavbarDemo />
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
@@ -253,10 +283,11 @@ const AcademicHub = () => {
           </div>
 
           <div className="border-t border-slate-700/50 mt-8 pt-8 text-center text-slate-400">
-            <p>&copy; 2024 AcademicHub. All rights reserved.</p>
+            <p>&copy; 2025 Asshelp. All rights reserved.</p>
           </div>
         </div>
       </footer>
+      </div>
     </div>
   );
 };
