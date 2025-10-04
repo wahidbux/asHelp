@@ -33,11 +33,11 @@ Payments, authentication, and file management are powered through Supabase.
 git clone https://github.com/yourusername/college-assignment-platform.git
 cd college-assignment-platform
 ```
-###2. Install dependencies
+### 2. Install dependencies
 ```
 npm install
 ```
-###3. Set up Supabase
+### 3. Set up Supabase
 
 -Go to the Supabase Dashboard and create a new project.
 -Navigate to Project Settings → API and copy your Project URL and anon/public API key.
@@ -58,16 +58,16 @@ file_url: text
 status: text (default: 'pending')
 created_at: timestamp (default: now())
 
-###5. Run the development server
+### 5. Run the development server
 ```
 npm run dev
 ```
-###6. Visit the application
+### 6. Visit the application
 ```
 http://localhost:3000
 ```
 
-##Folder Structure
+## Folder Structure
 ```
 src/
  ├─ app/
