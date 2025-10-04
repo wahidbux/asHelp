@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# College Assignment Help Platform
 
-## Getting Started
+A web-based platform where college students can upload assignment PDFs, and verified toppers complete them for a fee.  
+The platform uses Supabase for backend services and Next.js with TypeScript for the frontend, following a scalable architecture with Turbopack and the App Router.
 
-First, run the development server:
+---
 
-```bash
+## Overview
+
+The goal of this platform is to simplify academic help exchange within college communities.  
+Students can post their assignment requests, and verified toppers can complete them efficiently for a fair price.  
+Payments, authentication, and file management are powered through Supabase.
+
+---
+
+## Tech Stack
+
+| Area | Technology |
+|------|-------------|
+| Frontend | Next.js (TypeScript, App Router, Turbopack) |
+| Backend | Supabase (Database, Auth, Storage) |
+| Hosting | Vercel / Supabase Hosting |
+| Styling | Tailwind CSS |
+| State Management | React Context / Zustand (planned) |
+| Authentication | Supabase Auth (Email & OAuth support) |
+
+---
+
+## Installation and Setup
+
+### 1. Clone the repository
+```
+git clone https://github.com/yourusername/college-assignment-platform.git
+cd college-assignment-platform
+```
+###2. Install dependencies
+```
+npm install
+```
+###3. Set up Supabase
+
+-Go to the Supabase Dashboard and create a new project.
+-Navigate to Project Settings → API and copy your Project URL and anon/public API key.
+-In the project root, create a .env.local file and add:
+```
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_URL.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+```
+(Optional) In the Supabase dashboard:
+Go to Authentication → Providers and enable Email or Google sign-in.
+Go to Storage and create a bucket named assignments for file uploads.
+Go to Table Editor and create a table named assignments with columns:
+id: uuid (Primary key, default: uuid_generate_v4())
+student_id: text
+title: text
+description: text
+file_url: text
+status: text (default: 'pending')
+created_at: timestamp (default: now())
+
+###5. Run the development server
+```
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+###6. Visit the application
+```
+http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+##Folder Structure
+```
+src/
+ ├─ app/
+ │   ├─ page.tsx
+ │   ├─ layout.tsx
+ │   └─ (auth)/
+ │       ├─ login/page.tsx
+ │       └─ register/page.tsx
+ ├─ components/
+ │   ├─ Navbar.tsx
+ │   ├─ UploadForm.tsx
+ │   └─ AssignmentCard.tsx
+ ├─ lib/
+ │   └─ supabaseClient.ts
+ ├─ styles/
+ │   └─ globals.css
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+License:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT License © 2025 Agastya
