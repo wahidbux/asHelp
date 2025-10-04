@@ -1,91 +1,161 @@
-# College Assignment Help Platform
-
-A web-based platform where college students can upload assignment PDFs, and verified toppers complete them for a fee.  
-The platform uses Supabase for backend services and Next.js with TypeScript for the frontend, following a scalable architecture with Turbopack and the App Router.
+<div align="center">
+  <img src="public/logo.png" alt="AsHelp Logo" width="120" height="120">
+  
+  # AsHelp - Academic Assignment Platform
+  
+  **Connecting students with verified toppers for seamless academic assistance**
+  
+  [![Next.js](https://img.shields.io/badge/Next.js-15.3-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+  [![Supabase](https://img.shields.io/badge/Supabase-Backend-green?style=for-the-badge&logo=supabase)](https://supabase.com/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+</div>
 
 ---
 
-## Overview
+## Key Features
 
-The goal of this platform is to simplify academic help exchange within college communities.  
-Students can post their assignment requests, and verified toppers can complete them efficiently for a fair price.  
-Payments, authentication, and file management are powered through Supabase.
-
----
+- **Assignment Upload** - Seamless PDF file upload with drag & drop interface
+- **Payment Integration** - Razorpay payment gateway with multiple payment options
+- **User Dashboard** - Personal dashboard for managing assignments and profile
+- **Secure Authentication** - Email/password & Google OAuth via Supabase Auth
+- **Interactive Forms** - Dynamic forms for user registration and data input
+- **Background Effects** - Aurora and particle effects for enhanced visual appeal
+- **Animated Components** - Custom text animations, loaders, and transitions
+- **Fully Responsive** - Optimized for desktop, tablet & mobile devices
+- **Modern UI** - Clean interface with Tailwind CSS & custom components
+- **Blazing Fast** - Built with Next.js 15 and Turbopack for optimal performance
 
 ## Tech Stack
 
-| Area | Technology |
-|------|-------------|
-| Frontend | Next.js (TypeScript, App Router, Turbopack) |
-| Backend | Supabase (Database, Auth, Storage) |
-| Hosting | Vercel / Supabase Hosting |
-| Styling | Tailwind CSS |
-| State Management | React Context / Zustand (planned) |
-| Authentication | Supabase Auth (Email & OAuth support) |
+**Frontend:**
+- Next.js 15.3 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4.1
+- Framer Motion & GSAP
+
+**Backend & Services:**
+- Supabase (Database, Auth, Storage)
+- Vercel (Hosting)
+
+**UI & Components:**
+- Radix UI Primitives
+- Lucide Icons
+- Magic UI Components
 
 ---
 
-## Installation and Setup
+## Quick Start
 
-### 1. Clone the repository
-```
-git clone https://github.com/yourusername/college-assignment-platform.git
-cd college-assignment-platform
-```
-### 2. Install dependencies
-```
-npm install
-```
-### 3. Set up Supabase
+### Prerequisites
+- Node.js 18+ and npm
+- Supabase account
 
--Go to the Supabase Dashboard and create a new project.
--Navigate to Project Settings → API and copy your Project URL and anon/public API key.
--In the project root, create a .env.local file and add:
-```
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_URL.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
-```
-(Optional) In the Supabase dashboard:
-Go to Authentication → Providers and enable Email or Google sign-in.
-Go to Storage and create a bucket named assignments for file uploads.
-Go to Table Editor and create a table named assignments with columns:
-id: uuid (Primary key, default: uuid_generate_v4())
-student_id: text
-title: text
-description: text
-file_url: text
-status: text (default: 'pending')
-created_at: timestamp (default: now())
+### Installation
 
-### 5. Run the development server
-```
-npm run dev
-```
-### 6. Visit the application
-```
-http://localhost:3000
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Harshdev625/asHelp.git
+   cd asHelp
+   ```
 
-## Folder Structure
-```
-src/
- ├─ app/
- │   ├─ page.tsx
- │   ├─ layout.tsx
- │   └─ (auth)/
- │       ├─ login/page.tsx
- │       └─ register/page.tsx
- ├─ components/
- │   ├─ Navbar.tsx
- │   ├─ UploadForm.tsx
- │   └─ AssignmentCard.tsx
- ├─ lib/
- │   └─ supabaseClient.ts
- ├─ styles/
- │   └─ globals.css
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup**
+   
+   Create a `.env.local` file in the root directory:
+   ```env
+   # Supabase Configuration
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Supabase Setup**
+   
+   - Create a new project at [Supabase Dashboard](https://supabase.com/dashboard)
+   - Enable Authentication providers (Email, etc.)
+   - Create storage bucket: `assignments`
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Project Structure
 
 ```
-License:
+asHelp/
+├── src/
+│   ├── app/                      # Next.js App Router
+│   │   ├── layout.tsx           # Root layout
+│   │   ├── page.tsx             # Home page
+│   │   ├── globals.css          # Global styles
+│   │   ├── api/                 # API routes
+│   │   ├── dashboard/           # Dashboard pages
+│   │   ├── form/                # Form pages
+│   │   ├── payment/             # Payment integration
+│   │   └── sign/                # Authentication
+│   ├── components/              # Reusable components
+│   │   ├── nav.tsx              # Navigation
+│   │   ├── upload.tsx           # File upload
+│   │   ├── ui/                  # UI primitives
+│   │   ├── magicui/             # Animated components
+│   │   └── Backgrounds/         # Background effects
+│   └── lib/                     # Utilities
+│       ├── supabaseclient.ts    # Supabase config
+│       └── utils.ts             # Helper functions
+├── public/                      # Static assets
+└── Configuration files
+```
 
-MIT License © 2025 Agastya
+## Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with Turbopack |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+
+## Contributing
+
+1. **Fork the repository**
+2. **Create your feature branch**
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. **Commit your changes**
+   ```bash
+   git commit -m 'Add some AmazingFeature'
+   ```
+4. **Push to the branch**
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. **Open a Pull Request**
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Next.js](https://nextjs.org/) - The React Framework for Production
+- [Supabase](https://supabase.com/) - Open Source Firebase Alternative
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-First CSS Framework
+- [Framer Motion](https://www.framer.com/motion/) - Production-Ready Motion Library
+- [Radix UI](https://www.radix-ui.com/) - Low-level UI Primitives
+
+---
+
+<div align="center">
+  <p>Built with ❤️ using modern web technologies</p>
+</div>
