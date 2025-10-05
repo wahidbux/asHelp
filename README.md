@@ -9,6 +9,9 @@
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
   [![Supabase](https://img.shields.io/badge/Supabase-Backend-green?style=for-the-badge&logo=supabase)](https://supabase.com/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+  [![Hacktoberfest](https://img.shields.io/badge/Hacktoberfest-2025-orange?style=for-the-badge)](https://hacktoberfest.com/)
+  [![GSSoC](https://img.shields.io/badge/GSSoC-2025-green?style=for-the-badge)](https://gssoc.girlscript.tech/)
 </div>
 
 ---
@@ -89,6 +92,24 @@
    
    Navigate to [http://localhost:3000](http://localhost:3000)
 
+## Screenshots / Demo
+
+### Platform Preview
+<div align="center">
+  <img src="public/img1.png" alt="AsHelp Homepage" width="400px" style="margin-right: 10px;">
+  <img src="public/img2.png" alt="Assignment Upload Interface" width="400px" style="margin-left: 10px;">
+</div>
+<p align="center">
+  <em>Homepage & Assignment Upload Interface</em>
+</p>
+
+> **Note:** Screenshots show the current UI design. The interface may evolve as new features are added.
+
+### Live Demo
+🚀 **[View Live Demo](https://your-demo-url.vercel.app)** *(Coming Soon)*
+
+*For a complete walkthrough, check out our [demo video](https://your-video-url) showcasing key features and user flows.*
+
 ## Project Structure
 
 ```
@@ -141,6 +162,19 @@ asHelp/
    git push origin feature/AmazingFeature
    ```
 5. **Open a Pull Request**
+
+## Code of Conduct
+
+We are committed to fostering a welcoming and inclusive community. Please read our [Code of Conduct](CODE_OF_CONDUCT.md) to understand the standards we expect from all contributors.
+
+**Quick Summary:**
+- Be respectful and considerate in all interactions
+- Use inclusive language and avoid discriminatory behavior
+- Accept constructive feedback gracefully
+- Focus on what's best for the community
+- Show empathy towards other community members
+
+For detailed guidelines, please see our full [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
