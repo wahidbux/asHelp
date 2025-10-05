@@ -10,9 +10,10 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GitHubStarsButton } from '@/components/animate-ui/buttons/github-stars';
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseclient";
 
 export function NavbarDemo() {
   const navItems = [
@@ -31,7 +32,23 @@ export function NavbarDemo() {
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+    // Listen for auth state changes
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="relative w-full">
@@ -42,8 +59,9 @@ export function NavbarDemo() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <GitHubStarsButton username="kris70lesgo" repo="s1" />
-            <NavbarButton variant="secondary" onClick={() => router.push('/sign')}>Login</NavbarButton>
-            
+            {user === null && (
+              <NavbarButton variant="secondary" onClick={() => router.push('/sign')}>Login</NavbarButton>
+            )}
           </div>
         </NavBody>
 
@@ -72,14 +90,15 @@ export function NavbarDemo() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              <NavbarButton
-                onClick={() => { setIsMobileMenuOpen(false); router.push('/sign'); }}
-                variant="primary"
-                className="w-full"
-              >
-                Login
-              </NavbarButton>
-              
+              {user === null && (
+                <NavbarButton
+                  onClick={() => { setIsMobileMenuOpen(false); router.push('/sign'); }}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Login
+                </NavbarButton>
+              )}
             </div>
           </MobileNavMenu>
         </MobileNav>
