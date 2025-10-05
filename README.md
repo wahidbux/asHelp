@@ -95,13 +95,16 @@
 ## Screenshots / Demo
 
 ### Platform Preview
+
 <div align="center">
-  <img src="public/img1.png" alt="AsHelp Homepage" width="400px" style="margin-right: 10px;">
-  <img src="public/img2.png" alt="Assignment Upload Interface" width="400px" style="margin-left: 10px;">
+  <img src="public/homepage.png" alt="AsHelp Homepage">
+  <p><em>Homepage - Modern landing page with clean design</em></p>
 </div>
-<p align="center">
-  <em>Homepage & Assignment Upload Interface</em>
-</p>
+
+<div align="center">
+  <img src="public/login.png" alt="Login Page">
+  <p><em>Login Interface - Secure authentication system</em></p>
+</div>
 
 > **Note:** Screenshots show the current UI design. The interface may evolve as new features are added.
 
