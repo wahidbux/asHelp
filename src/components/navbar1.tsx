@@ -3,12 +3,25 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { LiquidGlass } from 'liquid-glass-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
+      {/* Liquid Glass Effect Background */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none -z-10">
+        {/* @ts-ignore */}
+        <LiquidGlass
+          color="#ffffff"
+          backgroundColor="rgba(255,255,255,0.15)"
+          blur={20}
+          distortion={0.25}
+          opacity={0.85}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         
         {/* Logo */}
