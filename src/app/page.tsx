@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import TestimonialMarquee from "@/components/mwrap"
 import { NavbarDemo } from "@/components/nav";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import  Loader from "@/components/loader";
+import { motion } from "motion/react";
 
 
 
@@ -57,12 +59,7 @@ export default function BackgroundBoxesDemo() {
       {isLoading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900">
           <div className="flex flex-col items-center gap-4">
-            <DotLottieReact
-              src="https://lottie.host/184e3f2e-31ad-4bfd-9ea2-5bc8650cf1c9/dBlK14bVkG.lottie"
-              loop
-              autoplay
-            />
-            <p className="text-white text-lg font-medium">Loading...</p>
+            <Loader />
           </div>
         </div>
       )}
