@@ -3,26 +3,15 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LiquidGlass } from 'liquid-glass-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
-      {/* Liquid Glass Effect Background */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none -z-10">
-        {/* @ts-ignore */}
-        <LiquidGlass
-          color="#ffffff"
-          backgroundColor="rgba(255,255,255,0.15)"
-          blur={20}
-          distortion={0.25}
-          opacity={0.85}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 w-full z-50">
+      {/* Glassmorphism Background */}
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-md border-b border-white/20 shadow-lg"></div>
+      <div className="relative max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         
         {/* Logo */}
         <div className="flex items-center space-x-2">
@@ -62,7 +51,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-gray-900 bg-opacity-90">
+        <div className="md:hidden bg-black/20 backdrop-blur-md border-t border-white/20">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-white">Overview</Link>
                 <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-white">Why Tedy?</Link>
