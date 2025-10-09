@@ -229,7 +229,7 @@ const FormPa = () => {
   
           {/* Step 1: Personal Information */}
           {step === 1 && (
-            <div className="bg-black/80 backdrop-blur-lg rounded-xl mt-10 p-8 w-full max-w-5xl shadow-xl">
+            <div className="bg-transparent lg rounded-xl mt-10 p-8 w-full max-w-5xl shadow-xl">
               <h2 className="text-lg md:text-xl font-semibold mb-1 text-white">
                 Personal Info<span className="hidden md:inline">rmation</span>
               </h2>
