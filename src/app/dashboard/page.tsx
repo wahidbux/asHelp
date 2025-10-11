@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, User, Menu, X, Star, Clock, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { NavbarDemo } from "@/components/nav";
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+// import Loader from '@/components/loader'; // OLD LOADER REMOVED
+import { AnimatePresence } from 'framer-motion';
+import AcademicHubSkeleton from '@/components/skeletons/dashboardPageSkeleton';
 
 
 const AcademicHub = () => {
@@ -85,19 +87,11 @@ const AcademicHub = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-y-auto">
-      {/* Loading Screen */}
-      {isLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900">
-          <div className="flex flex-col items-center gap-4">
-            <DotLottieReact
-              src="https://lottie.host/184e3f2e-31ad-4bfd-9ea2-5bc8650cf1c9/dBlK14bVkG.lottie"
-              loop
-              autoplay
-            />
-            <p className="text-white text-lg font-medium">Loading...</p>
-          </div>
-        </div>
-      )}
+      {/* Loading Screen --- UPDATED SECTION */}
+      <AnimatePresence>
+        {isLoading && <AcademicHubSkeleton />}
+      </AnimatePresence>
+      
       <div className={isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}>
         <NavbarDemo />
 
@@ -149,7 +143,7 @@ const AcademicHub = () => {
                 className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-slate-600 transition-all duration-300 group hover:transform hover:scale-105"
               >
                 <div className="flex justify-between items-start mb-4">
-                  <span className={`px-3 py-1 ₹{project.tagColor} text-white text-sm font-medium rounded-full`}>
+                  <span className={`px-3 py-1 ${project.tagColor} text-white text-sm font-medium rounded-full`}>
                     {project.tag}
                   </span>
                 </div>
