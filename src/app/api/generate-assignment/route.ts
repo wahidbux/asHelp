@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Topic and subject are required' }, { status: 400 });
     }
 
+<<<<<<< HEAD
     // Extract text from uploaded files
     let fileContent = '';
     const files = Array.from(formData.entries()).filter(([key]) => key.startsWith('file_'));
@@ -71,12 +72,17 @@ export async function POST(req: NextRequest) {
       }
     }
 
+=======
+>>>>>>> 744373a (ai powered assignment generator added)
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
 
     const prompt = `Generate a comprehensive academic assignment on "${topic}" for ${subject} at ${level || 'undergraduate'} level. 
     Target word count: ${wordCount || 1000} words.
     ${requirements ? `Additional requirements: ${requirements}` : ''}
+<<<<<<< HEAD
     ${fileContent ? `\n\nReference materials provided:\n${fileContent}\n\nPlease incorporate relevant information from these reference materials into the assignment.` : ''}
+=======
+>>>>>>> 744373a (ai powered assignment generator added)
     
     Structure the assignment with:
     1. Title
@@ -85,6 +91,7 @@ export async function POST(req: NextRequest) {
     4. Conclusion
     5. References (if applicable)
     
+<<<<<<< HEAD
     ${includeImages ? `Also suggest 1 relevant image search term that would enhance this assignment. Use the main topic "${topic}" as the search term unless a more specific term would be better. Add this term as a JSON array in an HTML comment at the very end: <!-- ["term1"] -->` : ''}
     
     Format the response as structured HTML with proper headings, paragraphs, and formatting.`;
@@ -136,5 +143,15 @@ export async function POST(req: NextRequest) {
       ? 'Your limit for today has exceeded. Please try again tomorrow.'
       : error.message || 'Assignment generation failed';
     return NextResponse.json({ error: errorMessage }, { status: 500 });
+=======
+    Format the response as structured HTML with proper headings, paragraphs, and formatting.`;
+
+    const result = await model.generateContent(prompt);
+    const content = result.response.text();
+
+    return NextResponse.json({ content, topic, subject });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Assignment generation failed' }, { status: 500 });
+>>>>>>> 744373a (ai powered assignment generator added)
   }
 }
