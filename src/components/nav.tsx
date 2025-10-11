@@ -22,6 +22,10 @@ export function NavbarDemo() {
       link: "",
     },
     {
+      name: "AI Generator",
+      link: "/ai-generator",
+    },
+    {
       name: "About",
       link: "",
     },
