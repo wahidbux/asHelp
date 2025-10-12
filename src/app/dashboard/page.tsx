@@ -1,15 +1,14 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingCart, User, Menu, X, Star, Clock, Filter } from 'lucide-react';
+import { Star, Clock, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { NavbarDemo } from "@/components/nav";
-// import Loader from '@/components/loader'; // OLD LOADER REMOVED
 import { AnimatePresence } from 'framer-motion';
 import AcademicHubSkeleton from '@/components/skeletons/dashboardPageSkeleton';
+import Image from 'next/image';
 
 
 const AcademicHub = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
@@ -163,16 +162,20 @@ const AcademicHub = () => {
 
                 <div className="w-full aspect-square bg-slate-700/50 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
                   {project.id === 1 && (
-                    <img
+                    <Image
                       src="/img1.png"
                       alt="Assignment"
+                      width={400}
+                      height={400}
                       className="w-full h-full object-contain rounded-xl"
                     />
                   )}
                   {project.id === 2 && (
-                    <img
+                    <Image
                       src="/img2.png"
                       alt="Termwork"
+                      width={400}
+                      height={400}
                       className="w-full h-full object-contain rounded-xl"
                     />
                   )}

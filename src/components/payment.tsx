@@ -46,7 +46,7 @@ export function PaymentOptionsOverlay() {
       name: "Your Company Name",
       description: "Order Payment",
       image: "/logo.png", // Optional: your logo
-      handler: function (response: any) {
+      handler: function () {
         // Payment successful
         setConfirmed(true);
       },
@@ -59,7 +59,7 @@ export function PaymentOptionsOverlay() {
         color: "#3399cc",
       },
     };
-    // @ts-ignore
+    // @ts-expect-error Razorpay is loaded dynamically
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
@@ -79,7 +79,7 @@ export function PaymentOptionsOverlay() {
                   <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><rect width="24" height="24" rx="12" fill="#e0edff"/><path d="M6 8.5A2.5 2.5 0 0 1 8.5 6h7A2.5 2.5 0 0 1 18 8.5v7A2.5 2.5 0 0 1 15.5 18h-7A2.5 2.5 0 0 1 6 15.5v-7Z" stroke="#2563eb" strokeWidth="1.5"/><path d="M7.75 8.75 12 12.25l4.25-3.5" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </span>
                 <span className="font-bold text-black text-base sm:text-lg mb-1">Order Confirmation</span>
-                <span className="text-gray-500 text-center text-xs sm:text-sm">You'll receive an email confirmation shortly with your order details.</span>
+                <span className="text-gray-500 text-center text-xs sm:text-sm">You&apos;ll receive an email confirmation shortly with your order details.</span>
               </div>
               {/* Processing */}
               <div className="flex flex-col items-center flex-1 min-w-[140px] sm:min-w-[180px]">
@@ -88,7 +88,7 @@ export function PaymentOptionsOverlay() {
                   <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><rect width="24" height="24" rx="12" fill="#fff7ed"/><path d="M7 9.5V15a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9.5m-10 0L12 6l5 3.5m-10 0h10" stroke="#fb923c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </span>
                 <span className="font-bold text-black text-base sm:text-lg mb-1">Processing</span>
-                <span className="text-gray-500 text-center text-xs sm:text-sm">We'll prepare your order for shipment within 1-2 business days.</span>
+                <span className="text-gray-500 text-center text-xs sm:text-sm">We&apos;ll prepare your order for shipment within 1-2 business days.</span>
               </div>
               {/* Shipping */}
               <div className="flex flex-col items-center flex-1 min-w-[140px] sm:min-w-[180px]">
@@ -97,7 +97,7 @@ export function PaymentOptionsOverlay() {
                   <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><rect width="24" height="24" rx="12" fill="#e6f9f0"/><path d="M3 13V6a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v7m-13 0h13m-13 0v5a1 1 0 0 0 1 1h1m11-6h2.382a1 1 0 0 1 .894.553l1.382 2.764A1 1 0 0 1 21 15.236V18a1 1 0 0 1-1 1h-1m-2-6v5m-10 0a2 2 0 1 0 4 0m6 0a2 2 0 1 0 4 0m-10 0h6" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </span>
                 <span className="font-bold text-black text-base sm:text-lg mb-1">Shipping</span>
-                <span className="text-gray-500 text-center text-xs sm:text-sm">Track your package with the tracking number we'll send you.</span>
+                <span className="text-gray-500 text-center text-xs sm:text-sm">Track your package with the tracking number we&apos;ll send you.</span>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 w-full mb-6 sm:mb-8">

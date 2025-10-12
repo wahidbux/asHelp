@@ -2,12 +2,12 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 
-const TailwindConnectButton = ({ children = null, ...props }: React.PropsWithChildren<{}>) => {
+const TailwindConnectButton = ({ children = null, ...props }: React.PropsWithChildren<Record<string, unknown>>) => {
   const router = useRouter();
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log('TailwindConnectButton clicked');
     e.preventDefault();
-    router.push('/sign');
+    router.push('/dashboard');
   };
   return (
     <button

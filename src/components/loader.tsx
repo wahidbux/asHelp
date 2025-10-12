@@ -10,6 +10,7 @@ const circle = {
 export default memo(function Loader() {
   const reduce = useReducedMotion();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const container = {
     hidden: {},
     visible: {

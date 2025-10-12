@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { GitHubStarsButton } from '@/components/animate-ui/buttons/github-stars';
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseclient";
+import type { User } from '@supabase/supabase-js';
 
 export function NavbarDemo() {
   const navItems = [
@@ -36,7 +37,7 @@ export function NavbarDemo() {
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
