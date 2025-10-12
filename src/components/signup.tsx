@@ -24,22 +24,23 @@ export default function SignupFormDemo() {
           setErrorMsg("Passwords do not match");
           return;
         }
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email,
           password,
         });
         if (error) throw error;
         router.push("/dashboard");
       } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
         router.push("/dashboard");
       }
-    } catch (error: any) {
-      setErrorMsg(error.message || "An error occurred");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "An error occurred";
+      setErrorMsg(errorMessage);
       console.error("Auth error:", error);
     }
   };

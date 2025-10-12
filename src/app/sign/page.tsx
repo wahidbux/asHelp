@@ -2,10 +2,8 @@
 import React from "react";
 import { Boxes } from "@/components/ui/background-boxes";
 import SignupFormDemo from "@/components/signup";
-import Navbar from "@/components/navbar1";
 import { AnimatePresence } from 'framer-motion';
 import SignupPageSkeleton from "@/components/skeletons/signinPageSkeleton";
-
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = React.useState(true);
