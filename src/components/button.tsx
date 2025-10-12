@@ -7,7 +7,7 @@ const TailwindConnectButton = ({ children = null, ...props }: React.PropsWithChi
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log('TailwindConnectButton clicked');
     e.preventDefault();
-    router.push('/sign');
+    router.push('/dashboard');
   };
   return (
     <button
