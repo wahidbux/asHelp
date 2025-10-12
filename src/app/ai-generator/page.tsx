@@ -19,7 +19,9 @@ export default function AIGenerator() {
     subject: '',
     wordCount: '1000',
     level: 'undergraduate',
-    requirements: ''
+    requirements: '',
+    includeImages: true,
+    imageQuery: ''
   });
   const [generatedContent, setGeneratedContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -71,7 +73,7 @@ export default function AIGenerator() {
     }
   };
 
-  const handleExportToPDF = () => {
+  const handleExportToPDF = async () => {
     // Check export limits
     const savedUsage = localStorage.getItem('ai-generator-usage');
     const usage = savedUsage ? JSON.parse(savedUsage) : { exportsToday: 0, exportLimit: 50 };
@@ -82,7 +84,7 @@ export default function AIGenerator() {
     }
     
     setIsExporting(true);
-    const success = exportToPDF(generatedContent, formData.topic || 'assignment');
+    const success = await exportToPDF(generatedContent, formData.topic || 'assignment');
     if (!success) alert('PDF export failed');
     
     // Update export count
@@ -116,7 +118,7 @@ export default function AIGenerator() {
       
       const data = await response.json();
       
-      exportToWord(generatedContent, formData.topic || 'assignment');
+      await exportToWord(generatedContent, formData.topic || 'assignment');
       
       // Update export count
       const newUsage = { ...usage, exportsToday: usage.exportsToday + 1 };
@@ -250,6 +252,32 @@ export default function AIGenerator() {
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
                   />
                 </div>
+                
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="includeImages"
+                    checked={formData.includeImages}
+                    onChange={(e) => setFormData({...formData, includeImages: e.target.checked})}
+                    className="rounded border-white/20 bg-white/10 text-purple-500 focus:ring-purple-500"
+                  />
+                  <Label htmlFor="includeImages" className="text-white/90 text-sm">
+                    Include relevant images from Unsplash
+                  </Label>
+                </div>
+                
+                {formData.includeImages && (
+                  <div className="space-y-2">
+                    <Label htmlFor="imageQuery" className="text-white/90">Image Search Term</Label>
+                    <Input
+                      id="imageQuery"
+                      value={formData.imageQuery}
+                      onChange={(e) => setFormData({...formData, imageQuery: e.target.value})}
+                      placeholder="e.g., sunflower, DNA structure, solar system"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                    />
+                  </div>
+                )}
                 
                 <Button 
                   onClick={handleGenerate} 
