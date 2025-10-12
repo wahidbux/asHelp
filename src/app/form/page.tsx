@@ -1,10 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Boxes } from "@/components/ui/background-boxes";
-import { cn } from "@/lib/utils";
-import BlurText from "@/components/BlurText";
-import GradientGlowButton from '@/components/button';
-import Navbar from '@/components/navbar1';
+import React, { useState, useEffect, Suspense } from "react";
 import Button2 from '@/components/button2';
 import Particles from '@/components/Backgrounds/Particles';
 import { User, FileText, UploadCloud, CreditCard, ChevronLeft } from 'lucide-react';
@@ -16,7 +11,7 @@ import { Counter } from '@/components/animate-ui/components/counter';
 import { PayButton } from '@/components/paybutton'
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const FormPa = () => {
+function FormPaContent() {
     const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
     const [firstName, setFirstName] = useState('');
@@ -35,10 +30,11 @@ const FormPa = () => {
     const [mainFile, setMainFile] = useState<File | null>(null);
     const [notesFile, setNotesFile] = useState<File | null>(null);
   
-    const [paymentMethod, setPaymentMethod] = useState('cod');
-  
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [loading, setLoading] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [error, setError] = useState('');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [success, setSuccess] = useState(false);
   
     // Step 2: Terms checkbox and counter
@@ -66,7 +62,7 @@ const FormPa = () => {
     async function uploadFile(file: File) {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
-      const { data, error } = await supabase.storage.from('uploads').upload(fileName, file);
+      const { error } = await supabase.storage.from('uploads').upload(fileName, file);
       if (error) throw error;
       // Get public URL
       const { data: publicUrlData } = supabase.storage.from('uploads').getPublicUrl(fileName);
@@ -608,7 +604,12 @@ const FormPa = () => {
         </div>
       </div>
     );
-  };
+  }
   
-  export default FormPa;
-  
+  export default function FormPa() {
+    return (
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+        <FormPaContent />
+      </Suspense>
+    );
+  }

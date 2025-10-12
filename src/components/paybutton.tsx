@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, CreditCard, DollarSign } from 'lucide-react';
+import { ChevronRight, CreditCard } from 'lucide-react';
 
 interface PayButtonProps {
   amount?: string;

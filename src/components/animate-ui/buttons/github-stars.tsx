@@ -18,6 +18,7 @@ import { SlidingNumber } from '@/components/animate-ui/text/sliding-number';
 
 type FormatNumberResult = { number: string[]; unit: string };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function formatNumber(num: number, formatted: boolean): FormatNumberResult {
   if (formatted) {
     if (num < 1000) {
@@ -121,9 +122,8 @@ function GitHubStarsButton({
   }, [motionVal, stars, isComponentInView]);
 
   const fillPercentage = Math.min(100, (motionNumberRef.current / stars) * 100);
-  const formattedResult = formatNumber(motionNumberRef.current, formatted);
-  const ghostFormattedNumber = formatNumber(stars, formatted);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderNumberSegments = (
     segments: string[],
     unit: string,
