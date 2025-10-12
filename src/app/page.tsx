@@ -7,7 +7,6 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import TailwindConnectButton from "@/components/button";
 import TestimonialMarquee from "@/components/mwrap"
 import { NavbarDemo } from "@/components/nav";
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import Image from 'next/image';
 import { AnimatePresence } from "framer-motion";
 import HomePageSkeleton from "@/components/skeletons/homePageSkeleton";

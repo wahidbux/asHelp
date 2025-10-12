@@ -542,42 +542,7 @@ function FormPaContent() {
             <div className="bg-black/80 backdrop-blur-lg rounded-xl mt-10 p-8 w-full max-w-2xl shadow-xl flex flex-col items-center">
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 text-center">Billing Summary</h2>
               <p className="text-sm text-gray-300 mb-6 text-center">Review your charges before proceeding to payment</p>
-              <div className="w-full bg-[#18181b] rounded-xl shadow-lg p-6 md:p-8 mb-6 flex flex-col gap-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">🧾</span>
-                  <span className="text-lg font-semibold text-white">Order Details</span>
-                </div>
-                <div className="text-xs text-gray-400 mb-4">Invoice #INV-2024-001234 &bull; Due: January 15, 2024</div>
-                <div className="flex justify-between items-center text-white font-medium">
-                  <span>Premium Subscription <span className="bg-gray-700 text-xs rounded px-2 py-0.5 ml-1">Monthly</span></span>
-                  <span>$29.99</span>
-                </div>
-                <div className="flex justify-between items-center text-white">
-                  <span>Additional Storage <span className="bg-gray-700 text-xs rounded px-2 py-0.5 ml-1">50GB</span></span>
-                  <span>$9.98</span>
-                </div>
-                <div className="flex justify-between items-center text-white">
-                  <span>Priority Support <span className="bg-gray-700 text-xs rounded px-2 py-0.5 ml-1">Monthly</span></span>
-                  <span>$9.99</span>
-                </div>
-                <hr className="my-2 border-gray-700" />
-                <div className="flex justify-between text-gray-300 text-sm">
-                  <span>Subtotal</span>
-                  <span>$49.96</span>
-                </div>
-                <div className="flex justify-between text-gray-300 text-sm">
-                  <span>Tax (8%)</span>
-                  <span>$4.00</span>
-                </div>
-                <div className="flex justify-between text-gray-300 text-sm mb-2">
-                  <span>Processing Fee</span>
-                  <span>$2.50</span>
-                </div>
-                <div className="flex justify-between items-center text-lg font-bold text-white mt-2">
-                  <span>Total</span>
-                  <span>$56.46</span>
-                </div>
-              </div>
+              
               {/* Show PayButton on desktop/tablet, default button on mobile */}
               <div className="w-full">
                 <div className="hidden md:block">
@@ -591,7 +556,7 @@ function FormPaContent() {
                     className="w-full bg-white text-black font-semibold py-2 rounded-lg text-base transition hover:bg-gray-200 mb-3 flex items-center justify-center gap-2"
                     onClick={() => proceedToPayment(finalAmount)}
                   >
-                    <span>Proceed to Pay&nbsp;${finalAmount}</span>
+                    <span>Proceed to Pay&nbsp;₹{finalAmount}</span>
                   </button>
                 </div>
               </div>

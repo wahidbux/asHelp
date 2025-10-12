@@ -75,7 +75,7 @@ const PayButton: React.FC<PayButtonProps> = ({
                 transition-opacity duration-300 delay-1000
                 ${isHovered ? 'opacity-100' : 'opacity-0'}
               `}>
-                $
+                ₹
               </div>
             </div>
             <div className="flex justify-center mt-1 space-x-px">
