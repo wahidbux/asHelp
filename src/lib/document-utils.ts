@@ -63,9 +63,11 @@ export const exportToPDF = async (content: string, filename: string = 'assignmen
       const text = element.textContent?.trim();
       if (!text) continue;
       
-      // Set font size based on element type
-      if (element.tagName.match(/^H[1-6]$/)) {
-        pdf.setFontSize(16);
+      // Set font size based on element type with proper heading hierarchy
+      const headingLevel = element.tagName.match(/^H([1-6])$/)?.[1];
+      if (headingLevel) {
+        const fontSize = Math.max(20 - parseInt(headingLevel) * 2, 12);
+        pdf.setFontSize(fontSize);
         pdf.setFont('helvetica', 'bold');
       } else {
         pdf.setFontSize(12);
@@ -81,7 +83,7 @@ export const exportToPDF = async (content: string, filename: string = 'assignmen
       }
       
       // Add spacing before headings
-      if (element.tagName.match(/^H[1-6]$/) && yPosition > 20) {
+      if (headingLevel && yPosition > 20) {
         yPosition += 5;
       }
       
@@ -136,10 +138,11 @@ export const exportToWord = async (content: string, filename: string = 'assignme
         .replace(/{/g, '\\{')
         .replace(/}/g, '\\}');
       
-      // Format based on element type
-      if (element.tagName.match(/^H[1-6]$/)) {
-        // Heading: bold, larger font
-        rtfContent += `\\f1\\fs28\\b ${cleanText}\\b0\\fs24\\par\\par `;
+      // Format based on element type with proper heading hierarchy
+      const headingLevel = element.tagName.match(/^H([1-6])$/)?.[1];
+      if (headingLevel) {
+        const fontSize = Math.max(32 - parseInt(headingLevel) * 4, 20);
+        rtfContent += `\\f1\\fs${fontSize}\\b ${cleanText}\\b0\\fs24\\par\\par `;
       } else {
         // Paragraph: normal text
         rtfContent += `\\f0\\fs24 ${cleanText}\\par\\par `;

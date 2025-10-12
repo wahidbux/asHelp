@@ -43,10 +43,32 @@ async function fetchRelevantImage(query: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { topic, subject, wordCount, level, requirements, includeImages = true, imageQuery } = await req.json();
+    const formData = await req.formData();
+    const topic = formData.get('topic') as string;
+    const subject = formData.get('subject') as string;
+    const wordCount = formData.get('wordCount') as string;
+    const level = formData.get('level') as string;
+    const requirements = formData.get('requirements') as string;
+    const includeImages = formData.get('includeImages') === 'true';
+    const imageQuery = formData.get('imageQuery') as string;
 
     if (!topic || !subject) {
       return NextResponse.json({ error: 'Topic and subject are required' }, { status: 400 });
+    }
+
+    // Extract text from uploaded files
+    let fileContent = '';
+    const files = Array.from(formData.entries()).filter(([key]) => key.startsWith('file_'));
+    
+    for (const [, file] of files) {
+      if (file instanceof File) {
+        try {
+          const text = await file.text();
+          fileContent += `\n\nReference from ${file.name}:\n${text}\n`;
+        } catch (error) {
+          console.error(`Failed to read file ${file.name}:`, error);
+        }
+      }
     }
 
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
@@ -54,6 +76,7 @@ export async function POST(req: NextRequest) {
     const prompt = `Generate a comprehensive academic assignment on "${topic}" for ${subject} at ${level || 'undergraduate'} level. 
     Target word count: ${wordCount || 1000} words.
     ${requirements ? `Additional requirements: ${requirements}` : ''}
+    ${fileContent ? `\n\nReference materials provided:\n${fileContent}\n\nPlease incorporate relevant information from these reference materials into the assignment.` : ''}
     
     Structure the assignment with:
     1. Title
@@ -67,6 +90,11 @@ export async function POST(req: NextRequest) {
     Format the response as structured HTML with proper headings, paragraphs, and formatting.`;
 
     const result = await model.generateContent(prompt);
+    
+    if (!result.response) {
+      throw new Error('Your limit for today has exceeded. Please try again tomorrow.');
+    }
+    
     let content = result.response.text();
     
     // Extract image suggestions and fetch images
@@ -81,18 +109,16 @@ export async function POST(req: NextRequest) {
           const searchTerm = imageQuery || topic;
           const image = await fetchRelevantImage(searchTerm);
           if (image) {
-            const sections = content.split(/<h[2-3][^>]*>/i);
-            if (sections.length > 1) {
-              sections[1] = sections[1] + `
+            // Find the first heading after introduction to inject image
+            const headingMatch = content.match(/(<h[2-6][^>]*>)/i);
+            if (headingMatch) {
+              const imageHtml = `
 <div class="image-container" style="margin: 20px 0; text-align: center;">
   <img src="${image.url}" alt="${image.alt}" style="max-width: 100%; height: auto; border-radius: 8px;" data-download-url="${image.downloadUrl}" />
-</div>`;
-              
-              let reconstructed = sections[0];
-              for (let i = 1; i < sections.length; i++) {
-                reconstructed += '<h2>' + sections[i];
-              }
-              content = reconstructed;
+</div>
+`;
+              // Insert image before the first main heading, preserving the original heading tag
+              content = content.replace(headingMatch[1], imageHtml + headingMatch[1]);
             }
           }
           
@@ -106,6 +132,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ content, topic, subject });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Assignment generation failed' }, { status: 500 });
+    const errorMessage = error.message?.includes('limit') || error.message?.includes('quota') || error.message?.includes('exceeded')
+      ? 'Your limit for today has exceeded. Please try again tomorrow.'
+      : error.message || 'Assignment generation failed';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

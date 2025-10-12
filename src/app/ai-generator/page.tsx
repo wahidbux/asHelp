@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileText, Loader2, Sparkles, Brain } from 'lucide-react';
+import { Download, FileText, Loader2, Sparkles, Brain, Upload, X } from 'lucide-react';
 import { exportToPDF, exportToWord } from '@/lib/document-utils';
 
 
@@ -23,30 +23,56 @@ export default function AIGenerator() {
     includeImages: true,
     imageQuery: ''
   });
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [generatedContent, setGeneratedContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{type: 'error' | 'success' | 'info', text: string} | null>(null);
+
+  const getUsage = () => {
+    const saved = localStorage.getItem('ai-generator-usage');
+    return saved ? JSON.parse(saved) : { geminiUsage: 0, geminiLimit: 100, exportsToday: 0, exportLimit: 50 };
+  };
+
+  const updateUsage = (type: 'generation' | 'export') => {
+    const usage = getUsage();
+    const newUsage = type === 'generation' 
+      ? { ...usage, geminiUsage: usage.geminiUsage + 1 }
+      : { ...usage, exportsToday: usage.exportsToday + 1 };
+    localStorage.setItem('ai-generator-usage', JSON.stringify(newUsage));
+  };
 
   const handleGenerate = async () => {
-    // Check usage limits
-    const savedUsage = localStorage.getItem('ai-generator-usage');
-    const usage = savedUsage ? JSON.parse(savedUsage) : { geminiUsage: 0, geminiLimit: 100 };
+    const usage = getUsage();
     
     if (usage.geminiUsage >= usage.geminiLimit) {
-      alert('Daily limit reached! You have generated ' + usage.geminiLimit + ' assignments today. Please try again tomorrow.');
+      alert('Your limit for today has exceeded. Please try again tomorrow.');
       return;
     }
     
     setIsGenerating(true);
     try {
+      const formDataWithFiles = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataWithFiles.append(key, value.toString());
+      });
+      uploadedFiles.forEach((file, index) => {
+        formDataWithFiles.append(`file_${index}`, file);
+      });
+      
       const response = await fetch('/api/generate-assignment', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: formDataWithFiles
       });
       
       const data = await response.json();
-      if (data.error) throw new Error(data.error);
+      if (data.error) {
+        if (data.error.includes('limit') || data.error.includes('exceeded')) {
+          setStatusMessage({type: 'error', text: 'Your limit for today has exceeded. Please try again tomorrow.'});
+          return;
+        }
+        throw new Error(data.error);
+      }
       
       // Clean the content to remove any CSS and HTML that might affect layout
       const cleanContent = data.content
@@ -62,21 +88,23 @@ export default function AIGenerator() {
         .replace(/<body[^>]*>/gi, '')
         .replace(/<\/body>/gi, '');
       setGeneratedContent(cleanContent);
+      setStatusMessage({type: 'success', text: 'Assignment generated successfully!'});
       
-      // Update usage count
-      const newUsage = { ...usage, geminiUsage: usage.geminiUsage + 1 };
-      localStorage.setItem('ai-generator-usage', JSON.stringify(newUsage));
+      updateUsage('generation');
     } catch (error) {
-      alert('Generation failed: ' + (error as Error).message);
+      const errorMsg = (error as Error).message;
+      if (errorMsg.includes('limit') || errorMsg.includes('exceeded')) {
+        alert('Your limit for today has exceeded. Please try again tomorrow.');
+      } else {
+        alert('Generation failed: ' + errorMsg);
+      }
     } finally {
       setIsGenerating(false);
     }
   };
 
   const handleExportToPDF = async () => {
-    // Check export limits
-    const savedUsage = localStorage.getItem('ai-generator-usage');
-    const usage = savedUsage ? JSON.parse(savedUsage) : { exportsToday: 0, exportLimit: 50 };
+    const usage = getUsage();
     
     if (usage.exportsToday >= usage.exportLimit) {
       alert('Daily export limit reached! You have downloaded ' + usage.exportLimit + ' documents today. Please try again tomorrow.');
@@ -87,17 +115,12 @@ export default function AIGenerator() {
     const success = await exportToPDF(generatedContent, formData.topic || 'assignment');
     if (!success) alert('PDF export failed');
     
-    // Update export count
-    const newUsage = { ...usage, exportsToday: usage.exportsToday + 1 };
-    localStorage.setItem('ai-generator-usage', JSON.stringify(newUsage));
-    
+    updateUsage('export');
     setIsExporting(false);
   };
 
   const handleExportToWord = async () => {
-    // Check export limits
-    const savedUsage = localStorage.getItem('ai-generator-usage');
-    const usage = savedUsage ? JSON.parse(savedUsage) : { exportsToday: 0, exportLimit: 50 };
+    const usage = getUsage();
     
     if (usage.exportsToday >= usage.exportLimit) {
       alert('Daily export limit reached! You have downloaded ' + usage.exportLimit + ' documents today. Please try again tomorrow.');
@@ -106,23 +129,8 @@ export default function AIGenerator() {
     
     setIsExporting(true);
     try {
-      const response = await fetch('/api/export-document', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content: generatedContent,
-          format: 'docx',
-          title: formData.topic || 'assignment'
-        })
-      });
-      
-      const data = await response.json();
-      
       await exportToWord(generatedContent, formData.topic || 'assignment');
-      
-      // Update export count
-      const newUsage = { ...usage, exportsToday: usage.exportsToday + 1 };
-      localStorage.setItem('ai-generator-usage', JSON.stringify(newUsage));
+      updateUsage('export');
     } catch (error) {
       alert('Word export failed: ' + (error as Error).message);
     } finally {
@@ -168,9 +176,28 @@ export default function AIGenerator() {
               </h1>
               <Sparkles className="h-8 w-8 text-pink-400" />
             </div>
-            <p className="text-white/90 text-lg max-w-2xl mx-auto">
+            <p className="text-white/90 text-lg max-w-2xl mx-auto mb-6">
               Generate professional academic assignments with AI. Get structured, well-formatted content in seconds.
             </p>
+            
+            {/* Status Message */}
+            {statusMessage && (
+              <div className={`mb-6 p-4 rounded-lg border max-w-2xl mx-auto ${
+                statusMessage.type === 'error' ? 'bg-red-900/20 border-red-500/50 text-red-300' :
+                statusMessage.type === 'success' ? 'bg-green-900/20 border-green-500/50 text-green-300' :
+                'bg-blue-900/20 border-blue-500/50 text-blue-300'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <span>{statusMessage.text}</span>
+                  <button 
+                    onClick={() => setStatusMessage(null)}
+                    className="text-white/60 hover:text-white"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           
 
@@ -278,6 +305,54 @@ export default function AIGenerator() {
                     />
                   </div>
                 )}
+                
+                {/* File Upload Section */}
+                <div className="space-y-2">
+                  <Label className="text-white/90">Upload Reference Files (Optional)</Label>
+                  <div 
+                    className="border-2 border-dashed border-white/20 rounded-lg p-6 text-center hover:border-white/40 transition-colors cursor-pointer"
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const files = Array.from(e.dataTransfer.files);
+                      setUploadedFiles(prev => [...prev, ...files]);
+                    }}
+                    onDragOver={(e) => e.preventDefault()}
+                    onClick={() => document.getElementById('file-input')?.click()}
+                  >
+                    <Upload className="h-8 w-8 text-white/60 mx-auto mb-2" />
+                    <p className="text-white/90 text-sm">Drop files here or click to browse</p>
+                    <p className="text-white/60 text-xs mt-1">PDF, DOC, TXT files supported</p>
+                  </div>
+                  <input
+                    id="file-input"
+                    type="file"
+                    multiple
+                    accept=".pdf,.doc,.docx,.txt"
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+                      setUploadedFiles(prev => [...prev, ...files]);
+                    }}
+                  />
+                  
+                  {uploadedFiles.length > 0 && (
+                    <div className="space-y-2">
+                      {uploadedFiles.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between bg-white/5 p-2 rounded border border-white/10">
+                          <span className="text-white/90 text-sm truncate">{file.name}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setUploadedFiles(prev => prev.filter((_, i) => i !== index))}
+                            className="text-white/60 hover:text-white h-6 w-6 p-0"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 
                 <Button 
                   onClick={handleGenerate} 
