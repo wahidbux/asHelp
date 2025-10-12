@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import { Boxes } from "@/components/ui/background-boxes";
 import SignupFormDemo from "@/components/signup";
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from "framer-motion";
 import SignupPageSkeleton from "@/components/skeletons/signinPageSkeleton";
 
 export default function SignupPage() {
@@ -26,14 +27,26 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen relative w-full overflow-hidden bg-slate-900 flex flex-col items-center justify-center p-4">
       {/* Loading Screen --- UPDATED SECTION */}
-      <AnimatePresence>
-        {isLoading && <SignupPageSkeleton />}
-      </AnimatePresence>
+      <AnimatePresence>{isLoading && <SignupPageSkeleton />}</AnimatePresence>
 
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <Boxes />
-      
-      <div className={`relative z-30 transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+
+      {/* 🟡 Back Button — fixed at top-left */}
+      {!isLoading &&
+      (
+        <Link
+          href="/"
+          className="absolute top-6 left-6 z-40 px-6 py-3 rounded-lg  bg-black text-white font-semibold hover:bg-gray-900 transition-colors duration-200 shadow-md">
+          ← Back
+        </Link>
+      )}
+
+      <div
+        className={`relative z-30 transition-opacity duration-500 ${
+          isLoading ? "opacity-0" : "opacity-100"
+        }`}
+      >
         {!isLoading && <SignupFormDemo />}
       </div>
     </div>
