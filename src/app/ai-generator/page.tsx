@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileText, Loader2, Sparkles, Brain, Upload, X, Send, MessageSquare, Edit3 } from 'lucide-react';
+import { Download, FileText, Loader2, Sparkles, Brain, Upload, X, Send, MessageSquare, Edit3, Plus } from 'lucide-react';
 import { exportToPDF, exportToWord } from '@/lib/document-utils';
 
 
@@ -431,6 +431,15 @@ export default function AIGenerator() {
                           Generated Assignment
                         </CardTitle>
                         <div className="flex gap-2">
+                          <Button 
+                            onClick={() => setGeneratedContent('')}
+                            variant="outline"
+                            size="sm"
+                            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                          >
+                            <Plus className="h-4 w-4" />
+                            New
+                          </Button>
                           <Button 
                             onClick={handleExportToPDF} 
                             disabled={isExporting}
