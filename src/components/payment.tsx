@@ -5,6 +5,7 @@ import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-w
 import { Button } from "@/components/ui/button";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { GradientIconButton } from "@/components/ui/GradientIconButton";
 import Script from "next/script";
 
 export function PaymentOptionsOverlay() {
@@ -102,27 +103,9 @@ export function PaymentOptionsOverlay() {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 w-full mb-6 sm:mb-8">
-              <button 
-                onClick={() => router.push('/dashboard')}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 sm:py-4 px-6 sm:px-10 rounded-xl border-0 text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3 group"
-              >
-                <svg 
-                  width="20" 
-                  height="20" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  className="transition-transform group-hover:-translate-x-1"
-                >
-                  <path 
-                    d="M15 18l-6-6 6-6" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span>Continue Shopping</span>
-              </button>
+              <GradientIconButton href="/dashboard">
+                Continue Shopping
+              </GradientIconButton>
             </div>
           </div>
           {/* Footer: Need Help? */}
