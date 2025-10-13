@@ -5,6 +5,7 @@ import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-w
 import { Button } from "@/components/ui/button";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useSearchParams } from 'next/navigation';
+import { GradientIconButton } from "@/components/ui/GradientIconButton";
 import Script from "next/script";
 
 export function PaymentOptionsOverlay() {
@@ -101,10 +102,9 @@ export function PaymentOptionsOverlay() {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 w-full mb-6 sm:mb-8">
-              
-              <button className="bg-white text-black font-bold py-2 sm:py-3 px-5 sm:px-8 rounded-md border border-gray-300 text-base shadow hover:bg-gray-100 transition-all duration-200">
+              <GradientIconButton href="/dashboard">
                 Continue Shopping
-              </button>
+              </GradientIconButton>
             </div>
           </div>
           {/* Footer: Need Help? */}
