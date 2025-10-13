@@ -2,8 +2,8 @@
 import React from "react";
 import { Boxes } from "@/components/ui/background-boxes";
 import SignupFormDemo from "@/components/signup";
-import Navbar from "@/components/navbar1";
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { AnimatePresence } from 'framer-motion';
+import SignupPageSkeleton from "@/components/skeletons/signinPageSkeleton";
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -41,10 +41,15 @@ export default function SignupPage() {
           </div>
         </div>
       )}
+      {/* Loading Screen --- UPDATED SECTION */}
+      <AnimatePresence>
+        {isLoading && <SignupPageSkeleton />}
+      </AnimatePresence>
+
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <Boxes />
       
-      <div className={`relative z-30 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`relative z-30 transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
         {!isLoading && <SignupFormDemo />}
       </div>
     </div>

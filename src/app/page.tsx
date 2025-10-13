@@ -1,19 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Boxes } from "@/components/ui/background-boxes";
-import { cn } from "@/lib/utils";
-import Button2 from '@/components/button2';
-import { User, FileText, UploadCloud, CreditCard, Github } from 'lucide-react';
-import Upload from '@/components/upload';
+import { FileText, UploadCloud, CreditCard } from 'lucide-react';
 import Aurora from '@/components/Backgrounds/Aurora';
-import { useRef } from 'react';
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import TailwindConnectButton from "@/components/button";
-import { useRouter } from "next/navigation";
 import TestimonialMarquee from "@/components/mwrap"
 import { NavbarDemo } from "@/components/nav";
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import Image from 'next/image';
+import { AnimatePresence } from "framer-motion";
+import HomePageSkeleton from "@/components/skeletons/homePageSkeleton";
 
 
 
@@ -21,7 +17,6 @@ export default function BackgroundBoxesDemo() {
   const [scrollY, setScrollY] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -53,19 +48,10 @@ export default function BackgroundBoxesDemo() {
 
   return (
     <div className="relative bg-slate-900">
-      {/* Loading Screen */}
-      {isLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900">
-          <div className="flex flex-col items-center gap-4">
-            <DotLottieReact
-              src="https://lottie.host/184e3f2e-31ad-4bfd-9ea2-5bc8650cf1c9/dBlK14bVkG.lottie"
-              loop
-              autoplay
-            />
-            <p className="text-white text-lg font-medium">Loading...</p>
-          </div>
-        </div>
-      )}
+      {/* Loading Screen --- UPDATED SECTION */}
+      <AnimatePresence>
+        {isLoading && <HomePageSkeleton />}
+      </AnimatePresence>
 
       <NavbarDemo />
       
@@ -133,8 +119,8 @@ export default function BackgroundBoxesDemo() {
             </>
           }
         >
-          <img
-            src={`/linear.webp`}
+          <Image
+            src="/linear.webp"
             alt="hero"
             height={720}
             width={1400}
