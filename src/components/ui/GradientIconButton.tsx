@@ -2,95 +2,91 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils";
 
-const gradientIconButtonVariants = cva(
-  "inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl group",
-  {
-    variants: {
-      variant: {
-        default: "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white",
-        secondary: "bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white",
-        success: "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white",
-      },
-      size: {
-        default: "py-3 px-6 text-base sm:py-4 sm:px-10 sm:text-lg",
-        sm: "py-2 px-4 text-sm",
-        lg: "py-4 px-8 text-lg sm:py-5 sm:px-12 sm:text-xl",
-      },
-      icon: {
-        none: "",
-        "arrow-left": "",
-        "shopping-cart": "",
-        both: "",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-      icon: "both",
-    },
-  }
-);
-
-export interface GradientIconButtonProps
-  extends React.ComponentProps<typeof Link>,
-    VariantProps<typeof gradientIconButtonVariants> {
+export interface GradientIconButtonProps extends React.ComponentProps<typeof Link> {
   href: string;
   children: React.ReactNode;
+  className?: string;
 }
 
 const GradientIconButton = React.forwardRef<
   React.ElementRef<typeof Link>,
   GradientIconButtonProps
->(({ className, variant, size, icon, children, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   return (
     <Link
       ref={ref}
-      className={cn(gradientIconButtonVariants({ variant, size, icon, className }))}
+      className={cn(
+        // use group so children can respond to hover
+        // reserve extra padding on both sides so arrows don't overlap the text
+        "animated-button group relative flex items-center gap-2 pl-12 pr-12 py-4 border-4 border-transparent text-base bg-inherit rounded-[100px] font-semibold text-white cursor-pointer overflow-hidden",
+        // base shadow (kept subtle)
+        "shadow-[0_0_0_2px_#622bff]",
+        className
+      )}
       {...props}
     >
-      {(icon === "arrow-left" || icon === "both") && (
-        <svg 
-          width="20" 
-          height="20" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          className="transition-transform group-hover:-translate-x-1 [&_svg]:pointer-events-none [&_svg]:shrink-0"
-        >
-          <path 
-            d="M15 18l-6-6 6-6" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
-      <span>{children}</span>
-      {(icon === "shopping-cart" || icon === "both") && (
-        <svg 
-          width="20" 
-          height="20" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          className="transition-transform group-hover:rotate-12 [&_svg]:pointer-events-none [&_svg]:shrink-0"
-        >
-          <path 
-            d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H19M7 13v4a2 2 0 002 2h6a2 2 0 002-2v-4m-5 4h.01" 
-            stroke="currentColor" 
-            strokeWidth="1.5" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
+      {/* arr-2 SVG - Left arrow: start translated left and invisible, then slide in */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className={cn(
+          "arr-2 absolute w-6 h-6 z-[9] fill-white left-4 top-1/2 -translate-y-1/2",
+          // start offscreen to the left and invisible (we keep translate for slide-in)
+          "-translate-x-[150%] opacity-0",
+          // animate on group hover
+          "group-hover:translate-x-0 group-hover:opacity-100",
+          // always transition smoothly
+          "transition-all duration-[700ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
+        )}
+        viewBox="0 0 24 24"
+      >
+        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+      </svg>
+
+      {/* Text */}
+      <span
+        className={cn(
+          "text relative z-[1]",
+          "group-hover:translate-x-3",
+          "transition-all duration-[700ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
+        )}
+      >
+        {children}
+      </span>
+
+      {/* Circle element (kept as decorative) */}
+      <span
+        className={cn(
+          "circle absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full opacity-0",
+          "group-hover:w-[220px] group-hover:h-[220px] group-hover:opacity-100",
+          "bg-[#622bff] transition-all duration-[700ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
+        )}
+      />
+
+      {/* arr-1 SVG - Right arrow: visible initially, slide out on hover */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className={cn(
+          "arr-1 absolute w-6 h-6 z-[9] fill-white right-4 top-1/2 -translate-y-1/2",
+          "group-hover:translate-x-[150%] group-hover:opacity-0",
+          "transition-all duration-[700ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
+        )}
+        viewBox="0 0 24 24"
+      >
+        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+      </svg>
+
+      {/* Hover-driven background fill using group */}
+      <span
+        aria-hidden
+        className="absolute inset-0 rounded-[100px] bg-inherit group-hover:bg-[#622bff] transition-colors duration-[700ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
+      />
+
     </Link>
   );
 });
 
 GradientIconButton.displayName = "GradientIconButton";
 
-export { GradientIconButton, gradientIconButtonVariants };
+export { GradientIconButton };

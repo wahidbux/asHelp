@@ -4,13 +4,12 @@ import React, { useState, useEffect } from "react";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { Button } from "@/components/ui/button";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { GradientIconButton } from "@/components/ui/GradientIconButton";
 import Script from "next/script";
 
 export function PaymentOptionsOverlay() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const amount = searchParams.get('amount') || '100';
   const [selected, setSelected] = useState("cod");
   const [confirmed, setConfirmed] = useState(false);
