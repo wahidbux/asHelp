@@ -212,13 +212,9 @@ export default function AIGenerator() {
         <div className="max-w-7xl mx-auto px-4">
           {/* Hero Section */}
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Brain className="h-8 w-8 text-purple-400" />
-              <h1 className="text-4xl md:text-6xl font-bold text-white/90">
-                AI Assignment Generator
-              </h1>
-              <Sparkles className="h-8 w-8 text-pink-400" />
-            </div>
+            <h1 className="text-4xl md:text-6xl font-bold text-white/90 mb-4">
+              AI Assignment Generator
+            </h1>
             <p className="text-white/90 text-lg max-w-2xl mx-auto mb-6">
               Generate professional academic assignments with AI. Get structured, well-formatted content in seconds.
             </p>
