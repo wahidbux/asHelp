@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileText, Loader2, Sparkles, Brain, Upload, X } from 'lucide-react';
+import { Download, FileText, Loader2, Sparkles, Brain, Upload, X, Send, MessageSquare, Edit3 } from 'lucide-react';
 import { exportToPDF, exportToWord } from '@/lib/document-utils';
 
 
@@ -28,6 +28,10 @@ export default function AIGenerator() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{type: 'error' | 'success' | 'info', text: string} | null>(null);
+  const [chatMessages, setChatMessages] = useState<{role: 'user' | 'assistant', content: string}[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [isChatting, setIsChatting] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   const getUsage = () => {
     const saved = localStorage.getItem('ai-generator-usage');
@@ -89,6 +93,8 @@ export default function AIGenerator() {
         .replace(/<\/body>/gi, '');
       setGeneratedContent(cleanContent);
       setStatusMessage({type: 'success', text: 'Assignment generated successfully!'});
+      setChatMessages([]);
+      setShowChat(true);
       
       updateUsage('generation');
     } catch (error) {
@@ -100,6 +106,43 @@ export default function AIGenerator() {
       }
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleChatSubmit = async () => {
+    if (!chatInput.trim() || !generatedContent) return;
+    
+    const userMessage = chatInput.trim();
+    setChatInput('');
+    setIsChatting(true);
+    
+    // Add user message to chat
+    setChatMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    
+    try {
+      const response = await fetch('/api/chat-assignment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage,
+          currentContent: generatedContent,
+          topic: formData.topic,
+          subject: formData.subject
+        })
+      });
+      
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+      
+      // Add assistant response and update content if modified
+      setChatMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+      if (data.updatedContent) {
+        setGeneratedContent(data.updatedContent);
+      }
+    } catch (error) {
+      setChatMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
+    } finally {
+      setIsChatting(false);
     }
   };
 
@@ -202,17 +245,17 @@ export default function AIGenerator() {
           
 
           
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Input Form */}
-            <Card className="bg-white/10 backdrop-blur-md border-white/20">
-              <CardHeader>
-                <CardTitle className="text-white/90 flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  Assignment Details
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
+          {/* Main Content */}
+          <div className="space-y-8">
+            {!generatedContent && (
+              <Card className="bg-white/10 backdrop-blur-md border-white/20 max-w-4xl mx-auto">
+                <CardHeader>
+                  <CardTitle className="text-white/90 flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Assignment Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="topic" className="text-white/90">Topic *</Label>
                   <Input
@@ -372,61 +415,119 @@ export default function AIGenerator() {
                     </>
                   )}
                 </Button>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
             
-            {/* Generated Content */}
-            <Card className="bg-white/10 backdrop-blur-md border-white/20">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-white/90 flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
-                    Generated Content
-                  </CardTitle>
-                  {generatedContent && (
-                    <div className="flex gap-2">
-                      <Button 
-                        onClick={handleExportToPDF} 
-                        disabled={isExporting}
-                        variant="outline"
-                        size="sm"
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                      >
-                        {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-                        PDF
-                      </Button>
-                      <Button 
-                        onClick={handleExportToWord} 
-                        disabled={isExporting}
-                        variant="outline"
-                        size="sm"
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                      >
-                        {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-                        Word
-                      </Button>
-                    </div>
-                  )}
+            {generatedContent && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Generated Content */}
+                <div className="lg:col-span-2">
+                  <Card className="bg-white/10 backdrop-blur-md border-white/20">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-white/90 flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          Generated Assignment
+                        </CardTitle>
+                        <div className="flex gap-2">
+                          <Button 
+                            onClick={handleExportToPDF} 
+                            disabled={isExporting}
+                            variant="outline"
+                            size="sm"
+                            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                          >
+                            {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                            PDF
+                          </Button>
+                          <Button 
+                            onClick={handleExportToWord} 
+                            disabled={isExporting}
+                            variant="outline"
+                            size="sm"
+                            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                          >
+                            {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                            Word
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div 
+                        className="bg-white/5 p-6 rounded-lg border border-white/10 max-h-[600px] overflow-y-auto text-white"
+                        dangerouslySetInnerHTML={{ __html: generatedContent }}
+                      />
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardHeader>
-              <CardContent>
-                {generatedContent ? (
-                  <div 
-                    className="max-w-none bg-white/5 p-6 rounded-lg border border-white/10 max-h-96 overflow-y-auto text-white"
-                    dangerouslySetInnerHTML={{ __html: generatedContent }}
-                  />
-                ) : (
-                  <div className="text-center text-white/90 py-16">
-                    <FileText className="mx-auto h-16 w-16 mb-4 opacity-50" />
-                    <p className="text-lg">Generated assignment will appear here</p>
-                    <p className="text-sm mt-2">Fill in the details and click generate to start</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                
+                {/* Chat Interface */}
+                <div>
+                  <Card className="bg-white/10 backdrop-blur-md border-white/20">
+                    <CardHeader>
+                      <CardTitle className="text-white/90 flex items-center gap-2">
+                        <MessageSquare className="h-5 w-5" />
+                        Edit Assignment
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col h-[600px]">
+                      {/* Chat Messages */}
+                      <div className="flex-1 overflow-y-auto space-y-3 mb-4">
+                        {chatMessages.length === 0 ? (
+                          <div className="text-center text-white/60 py-8">
+                            <MessageSquare className="mx-auto h-8 w-8 mb-2 opacity-50" />
+                            <p className="text-sm">Ask me to modify your assignment!</p>
+                            <p className="text-xs mt-1 opacity-75">Try: "Make it shorter" or "Add examples"</p>
+                          </div>
+                        ) : (
+                          chatMessages.map((msg, idx) => (
+                            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                              <div className={`max-w-[85%] p-2 rounded-lg text-sm ${
+                                msg.role === 'user' 
+                                  ? 'bg-purple-500/20 text-white border border-purple-500/30' 
+                                  : 'bg-white/10 text-white/90 border border-white/20'
+                              }`}>
+                                {msg.content}
+                              </div>
+                            </div>
+                          ))
+                        )}
+                        {isChatting && (
+                          <div className="flex justify-start">
+                            <div className="bg-white/10 border border-white/20 p-2 rounded-lg">
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Chat Input */}
+                      <div className="flex gap-2">
+                        <Input
+                          value={chatInput}
+                          onChange={(e) => setChatInput(e.target.value)}
+                          placeholder="Ask me to modify..."
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60 text-sm"
+                          onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleChatSubmit()}
+                          disabled={isChatting}
+                        />
+                        <Button 
+                          onClick={handleChatSubmit}
+                          disabled={!chatInput.trim() || isChatting}
+                          size="sm"
+                          className="bg-purple-500 hover:bg-purple-600 text-white px-3"
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
           </div>
-          
-
         </div>
       </div>
     </div>
