@@ -65,17 +65,19 @@ export default function SignupFormDemo() {
 
   return (
     <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-neutral-50 p-4 md:rounded-2xl md:p-8 dark:bg-black">
+      {isSignUp && (
         <div>
           <AvatarCircles className="flex justify-center mb-6 mt-4"
-           numPeople={0} 
-           avatarUrls={[
-            {
-              imageUrl: "https://i.pravatar.cc/150?img=32",
-              profileUrl: "#",
-            }
-           ]}
-            />
+            numPeople={4} 
+            avatarUrls={[
+              {
+                imageUrl: "https://i.pravatar.cc/150?img=32",
+                profileUrl: "#",
+              }
+            ]}
+          />
         </div> 
+      )} 
 
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Welcome to Asshelp
