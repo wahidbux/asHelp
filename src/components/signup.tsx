@@ -68,10 +68,30 @@ export default function SignupFormDemo() {
       {isSignUp && (
         <div>
           <AvatarCircles className="flex justify-center mb-6 mt-4"
-            numPeople={4} 
+            numPeople={99} 
             avatarUrls={[
               {
                 imageUrl: "https://i.pravatar.cc/150?img=32",
+                profileUrl: "#",
+              },
+              {
+                imageUrl: "https://i.pravatar.cc/150?img=12",
+                profileUrl: "#",
+              },
+              {
+                imageUrl: "https://i.pravatar.cc/150?img=47",
+                profileUrl: "#",
+              },
+              {
+                imageUrl: "https://i.pravatar.cc/150?img=3",
+                profileUrl: "#",
+              },
+              { 
+                imageUrl: "https://i.pravatar.cc/150?img=5",
+                profileUrl: "#",
+              },
+              {
+                imageUrl: "https://i.pravatar.cc/150?img=8",
                 profileUrl: "#",
               }
             ]}
