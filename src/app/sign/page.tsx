@@ -5,6 +5,8 @@ import { Boxes } from "@/components/ui/background-boxes";
 import SignupFormDemo from "@/components/signup";
 import { AnimatePresence } from "framer-motion";
 import SignupPageSkeleton from "@/components/skeletons/signinPageSkeleton";
+import Navbar from "@/components/navbar1";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -26,6 +28,22 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen relative w-full overflow-hidden bg-slate-900 flex flex-col items-center justify-center p-4">
+      {/* Navbar */}
+      <Navbar />
+      
+      {/* Loading Screen */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900">
+          <div className="flex flex-col items-center gap-4">
+            <DotLottieReact
+              src="https://lottie.host/184e3f2e-31ad-4bfd-9ea2-5bc8650cf1c9/dBlK14bVkG.lottie"
+              loop
+              autoplay
+            />
+            <p className="text-white text-lg font-medium">Loading...</p>
+          </div>
+        </div>
+      )}
       {/* Loading Screen --- UPDATED SECTION */}
       <AnimatePresence>{isLoading && <SignupPageSkeleton />}</AnimatePresence>
 

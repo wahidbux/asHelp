@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AssHelp",
+  title: "AsHelp",
   description: "Get professional assignment writing services from verified experts.",
 };
 
