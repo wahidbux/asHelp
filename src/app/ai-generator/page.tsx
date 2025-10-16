@@ -19,6 +19,7 @@ export default function AIGenerator() {
     subject: '',
     wordCount: '1000',
     level: 'undergraduate',
+<<<<<<< HEAD
     requirements: '',
     includeImages: true,
     imageQuery: ''
@@ -51,11 +52,27 @@ export default function AIGenerator() {
     
     if (usage.geminiUsage >= usage.geminiLimit) {
       alert('Your limit for today has exceeded. Please try again tomorrow.');
+=======
+    requirements: ''
+  });
+  const [generatedContent, setGeneratedContent] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleGenerate = async () => {
+    // Check usage limits
+    const savedUsage = localStorage.getItem('ai-generator-usage');
+    const usage = savedUsage ? JSON.parse(savedUsage) : { geminiUsage: 0, geminiLimit: 100 };
+    
+    if (usage.geminiUsage >= usage.geminiLimit) {
+      alert('Daily limit reached! You have generated ' + usage.geminiLimit + ' assignments today. Please try again tomorrow.');
+>>>>>>> 744373a (ai powered assignment generator added)
       return;
     }
     
     setIsGenerating(true);
     try {
+<<<<<<< HEAD
       const formDataWithFiles = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         formDataWithFiles.append(key, value.toString());
@@ -77,6 +94,16 @@ export default function AIGenerator() {
         }
         throw new Error(data.error);
       }
+=======
+      const response = await fetch('/api/generate-assignment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+>>>>>>> 744373a (ai powered assignment generator added)
       
       // Clean the content to remove any CSS and HTML that might affect layout
       const cleanContent = data.content
@@ -92,6 +119,7 @@ export default function AIGenerator() {
         .replace(/<body[^>]*>/gi, '')
         .replace(/<\/body>/gi, '');
       setGeneratedContent(cleanContent);
+<<<<<<< HEAD
       setStatusMessage({type: 'success', text: 'Assignment generated successfully!'});
       setChatMessages([]);
       setShowChat(true);
@@ -104,11 +132,20 @@ export default function AIGenerator() {
       } else {
         alert('Generation failed: ' + errorMsg);
       }
+=======
+      
+      // Update usage count
+      const newUsage = { ...usage, geminiUsage: usage.geminiUsage + 1 };
+      localStorage.setItem('ai-generator-usage', JSON.stringify(newUsage));
+    } catch (error) {
+      alert('Generation failed: ' + (error as Error).message);
+>>>>>>> 744373a (ai powered assignment generator added)
     } finally {
       setIsGenerating(false);
     }
   };
 
+<<<<<<< HEAD
   const handleChatSubmit = async () => {
     if (!chatInput.trim() || !generatedContent) return;
     
@@ -148,6 +185,12 @@ export default function AIGenerator() {
 
   const handleExportToPDF = async () => {
     const usage = getUsage();
+=======
+  const handleExportToPDF = () => {
+    // Check export limits
+    const savedUsage = localStorage.getItem('ai-generator-usage');
+    const usage = savedUsage ? JSON.parse(savedUsage) : { exportsToday: 0, exportLimit: 50 };
+>>>>>>> 744373a (ai powered assignment generator added)
     
     if (usage.exportsToday >= usage.exportLimit) {
       alert('Daily export limit reached! You have downloaded ' + usage.exportLimit + ' documents today. Please try again tomorrow.');
@@ -155,15 +198,31 @@ export default function AIGenerator() {
     }
     
     setIsExporting(true);
+<<<<<<< HEAD
     const success = await exportToPDF(generatedContent, formData.topic || 'assignment');
     if (!success) alert('PDF export failed');
     
     updateUsage('export');
+=======
+    const success = exportToPDF(generatedContent, formData.topic || 'assignment');
+    if (!success) alert('PDF export failed');
+    
+    // Update export count
+    const newUsage = { ...usage, exportsToday: usage.exportsToday + 1 };
+    localStorage.setItem('ai-generator-usage', JSON.stringify(newUsage));
+    
+>>>>>>> 744373a (ai powered assignment generator added)
     setIsExporting(false);
   };
 
   const handleExportToWord = async () => {
+<<<<<<< HEAD
     const usage = getUsage();
+=======
+    // Check export limits
+    const savedUsage = localStorage.getItem('ai-generator-usage');
+    const usage = savedUsage ? JSON.parse(savedUsage) : { exportsToday: 0, exportLimit: 50 };
+>>>>>>> 744373a (ai powered assignment generator added)
     
     if (usage.exportsToday >= usage.exportLimit) {
       alert('Daily export limit reached! You have downloaded ' + usage.exportLimit + ' documents today. Please try again tomorrow.');
@@ -172,8 +231,28 @@ export default function AIGenerator() {
     
     setIsExporting(true);
     try {
+<<<<<<< HEAD
       await exportToWord(generatedContent, formData.topic || 'assignment');
       updateUsage('export');
+=======
+      const response = await fetch('/api/export-document', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: generatedContent,
+          format: 'docx',
+          title: formData.topic || 'assignment'
+        })
+      });
+      
+      const data = await response.json();
+      
+      exportToWord(generatedContent, formData.topic || 'assignment');
+      
+      // Update export count
+      const newUsage = { ...usage, exportsToday: usage.exportsToday + 1 };
+      localStorage.setItem('ai-generator-usage', JSON.stringify(newUsage));
+>>>>>>> 744373a (ai powered assignment generator added)
     } catch (error) {
       alert('Word export failed: ' + (error as Error).message);
     } finally {
@@ -212,6 +291,7 @@ export default function AIGenerator() {
         <div className="max-w-7xl mx-auto px-4">
           {/* Hero Section */}
           <div className="text-center mb-12">
+<<<<<<< HEAD
             <h1 className="text-4xl md:text-6xl font-bold text-white/90 mb-4">
               AI Assignment Generator
             </h1>
@@ -237,10 +317,23 @@ export default function AIGenerator() {
                 </div>
               </div>
             )}
+=======
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Brain className="h-8 w-8 text-purple-400" />
+              <h1 className="text-4xl md:text-6xl font-bold text-white/90">
+                AI Assignment Generator
+              </h1>
+              <Sparkles className="h-8 w-8 text-pink-400" />
+            </div>
+            <p className="text-white/90 text-lg max-w-2xl mx-auto">
+              Generate professional academic assignments with AI. Get structured, well-formatted content in seconds.
+            </p>
+>>>>>>> 744373a (ai powered assignment generator added)
           </div>
           
 
           
+<<<<<<< HEAD
           {/* Main Content */}
           <div className="space-y-8">
             {!generatedContent && (
@@ -252,6 +345,19 @@ export default function AIGenerator() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
+=======
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Input Form */}
+            <Card className="bg-white/10 backdrop-blur-md border-white/20">
+              <CardHeader>
+                <CardTitle className="text-white/90 flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Assignment Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+>>>>>>> 744373a (ai powered assignment generator added)
                 <div className="space-y-2">
                   <Label htmlFor="topic" className="text-white/90">Topic *</Label>
                   <Input
@@ -319,6 +425,7 @@ export default function AIGenerator() {
                   />
                 </div>
                 
+<<<<<<< HEAD
                 <div className="flex items-center space-x-2">
                   <input
                     type="checkbox"
@@ -393,6 +500,8 @@ export default function AIGenerator() {
                   )}
                 </div>
                 
+=======
+>>>>>>> 744373a (ai powered assignment generator added)
                 <Button 
                   onClick={handleGenerate} 
                   disabled={!formData.topic || !formData.subject || isGenerating}
@@ -411,6 +520,7 @@ export default function AIGenerator() {
                     </>
                   )}
                 </Button>
+<<<<<<< HEAD
                 </CardContent>
               </Card>
             )}
@@ -533,6 +643,63 @@ export default function AIGenerator() {
               </div>
             )}
           </div>
+=======
+              </CardContent>
+            </Card>
+            
+            {/* Generated Content */}
+            <Card className="bg-white/10 backdrop-blur-md border-white/20">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-white/90 flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Generated Content
+                  </CardTitle>
+                  {generatedContent && (
+                    <div className="flex gap-2">
+                      <Button 
+                        onClick={handleExportToPDF} 
+                        disabled={isExporting}
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                      >
+                        {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                        PDF
+                      </Button>
+                      <Button 
+                        onClick={handleExportToWord} 
+                        disabled={isExporting}
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                      >
+                        {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                        Word
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {generatedContent ? (
+                  <div 
+                    className="max-w-none bg-white/5 p-6 rounded-lg border border-white/10 max-h-96 overflow-y-auto text-white"
+                    dangerouslySetInnerHTML={{ __html: generatedContent }}
+                  />
+                ) : (
+                  <div className="text-center text-white/90 py-16">
+                    <FileText className="mx-auto h-16 w-16 mb-4 opacity-50" />
+                    <p className="text-lg">Generated assignment will appear here</p>
+                    <p className="text-sm mt-2">Fill in the details and click generate to start</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          
+
+>>>>>>> 744373a (ai powered assignment generator added)
         </div>
       </div>
     </div>
