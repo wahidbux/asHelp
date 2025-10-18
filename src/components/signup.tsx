@@ -7,8 +7,6 @@ import { cn } from "@/lib/utils";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { supabase } from "@/lib/supabaseclient"; // Import your Supabase client
 import { AvatarCircles } from "./ui/avatar-circles";
-import { div } from "framer-motion/client";
-import { Sign } from "crypto";
 
 export default function SignupFormDemo() {
   const [email, setEmail] = useState("");
