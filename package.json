@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --cache",
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write ."
   },
@@ -51,7 +51,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
-    "eslint": "^9",
+    "eslint": "^9.38.0",
     "eslint-config-next": "15.3.4",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
