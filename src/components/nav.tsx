@@ -23,8 +23,8 @@ export function NavbarDemo() {
       link: "",
     },
     {
-      name: "About",
-      link: "",
+      name: "AI Generator",
+      link: "/ai-generator",
     },
     {
       name: "Contact",
