@@ -1,30 +1,77 @@
 "use client";
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useRef } from "react";
 import { Star, Clock, Filter } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { NavbarDemo } from "@/components/nav";
 import { AnimatePresence } from "framer-motion";
 import AcademicHubSkeleton from "@/components/skeletons/dashboardPageSkeleton";
-import Image from "next/image";
+
+// Magic Card Component (from main)
+const MagicCard = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`relative overflow-hidden ${className}`}
+      style={{ position: "relative" }}
+    >
+      {/* Border highlight effect */}
+      {isHovered && (
+        <div
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(139, 92, 246, 0.4), transparent 40%)`,
+            maskImage:
+              "linear-gradient(black, black) content-box, linear-gradient(black, black)",
+            maskComposite: "exclude",
+            WebkitMaskImage:
+              "linear-gradient(black, black) content-box, linear-gradient(black, black)",
+            WebkitMaskComposite: "xor",
+            padding: "1px",
+            borderRadius: "inherit",
+          }}
+        />
+      )}
+      {/* Inner glow effect */}
+      {isHovered && (
+        <div
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(99, 102, 241, 0.1), transparent 40%)`,
+          }}
+        />
+      )}
+      {children}
+    </div>
+  );
+};
 
 const AcademicHub = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 4000);
-    return () => clearTimeout(timer);
-  }, [mounted]);
-
-  if (!mounted) return null;
+  const [isLoading, setIsLoading] = useState(false);
 
   const featuredProjects = [
     {
@@ -92,19 +139,18 @@ const AcademicHub = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-y-auto">
-      {/* Loading Screen --- UPDATED SECTION */}
+      {/* Loading Screen (from your branch) */}
       <AnimatePresence>{isLoading && <AcademicHubSkeleton />}</AnimatePresence>
 
       <div
         className={
-          isLoading
-            ? "opacity-0"
-            : "opacity-100 transition-opacity duration-500"
+          isLoading ? "opacity-0" : "opacity-100 transition-opacity duration-500"
         }
       >
+        {/* Navbar */}
         <NavbarDemo />
 
-        {/* Hero Section */}
+        {/* Hero Section (single) */}
         <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-3xl"></div>
           <div className="relative max-w-4xl mx-auto text-center">
@@ -130,13 +176,11 @@ const AcademicHub = () => {
           </div>
         </section>
 
-        {/* Featured Projects */}
+        {/* Featured Projects (MagicCard + your Shop Now button) */}
         <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12">
-              <h2 className="text-3xl font-bold mb-4 sm:mb-0">
-                Featured Projects
-              </h2>
+              <h2 className="text-3xl font-bold mb-4 sm:mb-0">Featured Projects</h2>
               <div className="flex gap-3">
                 <button className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg hover:bg-slate-700/50 transition-all">
                   <Filter className="w-4 h-4" />
@@ -150,7 +194,7 @@ const AcademicHub = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredProjects.map((project) => (
-                <div
+                <MagicCard
                   key={project.id}
                   className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-slate-600 transition-all duration-300 group hover:transform hover:scale-105"
                 >
@@ -181,16 +225,16 @@ const AcademicHub = () => {
                         className="w-full h-full object-contain rounded-xl"
                       />
                     )}
+                    {project.id === 3 && (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 rounded-xl flex items-center justify-center">
+                        <div className="text-4xl">📊</div>
+                      </div>
+                    )}
                     {project.id === 4 && (
                       <div className="w-full h-full bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-xl flex items-center justify-center">
                         <div className="text-4xl">🤖</div>
                       </div>
                     )}
-                    {project.id !== 1 &&
-                      project.id !== 2 &&
-                      project.id !== 4 && (
-                        <div className="w-12 h-12 bg-slate-600 rounded-lg opacity-50"></div>
-                      )}
                   </div>
 
                   <div className="mb-3">
@@ -202,7 +246,9 @@ const AcademicHub = () => {
                         {project.level}
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors"></h3>
+                    <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors">
+                      {project.title}
+                    </h3>
                   </div>
 
                   <div className="flex items-center gap-4 mb-4 text-sm text-slate-400">
@@ -235,6 +281,8 @@ const AcademicHub = () => {
                         </>
                       )}
                     </div>
+
+                    {/* Your new minimal button */}
                     <button
                       onClick={() => {
                         if (project.id === 1) {
@@ -264,11 +312,10 @@ const AcademicHub = () => {
                           d="M13.5 4.5L21 12l-7.5 7.5M21 12H3"
                         />
                       </svg>
-
-                      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-white origin-right scale-x-0 transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100"></span>
+                      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-white origin-right scale-x-0 transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100" />
                     </button>
                   </div>
-                </div>
+                </MagicCard>
               ))}
             </div>
           </div>
