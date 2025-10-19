@@ -15,16 +15,17 @@ export default function SignupFormDemo() {
   const [isSignUp, setIsSignUp] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordMatchError, setPasswordMatchError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMsg("");
+    setPasswordMatchError("");
     try {
       if (isSignUp) {
         if (password !== confirmPassword) {
-          setErrorMsg("Passwords do not match");
+          setPasswordMatchError("Passwords do not match");
           return;
         }
         const { error } = await supabase.auth.signUp({
@@ -158,44 +159,37 @@ export default function SignupFormDemo() {
         </LabelInputContainer>
         {isSignUp && (
        
-          <LabelInputContainer className="mb-8">
+          <LabelInputContainer className="mb-4">
             
             <Label htmlFor="confirmpassword">Confirm password</Label>
-            <div className="relative">
-              <Input
-                id="confirmpassword"
-                placeholder="••••••••"
-                type={showConfirmPassword ? "text" : "password"}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className="pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-all duration-300 focus:outline-none group"
-                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-              >
-                <div className="relative w-5 h-5">
-                  <IconEye 
-                    className={`absolute inset-0 h-5 w-5 transform transition-all duration-500 ease-out group-hover:scale-110 ${
-                      showConfirmPassword 
-                        ? 'opacity-0 rotate-180 scale-50' 
-                        : 'opacity-100 rotate-0 scale-100'
-                    }`}
-                  />
-                  <IconEyeOff 
-                    className={`absolute inset-0 h-5 w-5 transform transition-all duration-500 ease-out group-hover:scale-110 ${
-                      showConfirmPassword 
-                        ? 'opacity-100 rotate-0 scale-100' 
-                        : 'opacity-0 -rotate-180 scale-50'
-                    }`}
-                  />
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400/30 to-blue-500/30 dark:from-cyan-500/20 dark:to-blue-600/20 opacity-0 group-hover:opacity-100 transition-all duration-500 blur-lg scale-150"></span>
-                </div>
-              </button>
-            </div>
+            <Input
+              id="confirmpassword"
+              placeholder="••••••••"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                // Check password match in real-time
+                if (e.target.value && password && e.target.value !== password) {
+                  setPasswordMatchError("Passwords do not match");
+                } else {
+                  setPasswordMatchError("");
+                }
+              }}
+              onBlur={() => {
+                // Check on blur as well
+                if (confirmPassword && password && confirmPassword !== password) {
+                  setPasswordMatchError("Passwords do not match");
+                }
+              }}
+              required
+              className={passwordMatchError ? "border-red-500 focus:border-red-500" : ""}
+            />
+            {passwordMatchError && (
+              <p className="text-xs text-red-500 mt-1 animate-in fade-in slide-in-from-top-1">
+                {passwordMatchError}
+              </p>
+            )}
           </LabelInputContainer>
         )}
         {errorMsg && (
