@@ -27,10 +27,6 @@ export function NavbarDemo() {
       link: "/ai-generator",
     },
     {
-      name: "About",
-      link: "",
-    },
-    {
       name: "Contact",
       link: "",
     },

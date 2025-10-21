@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileText, Loader2, Sparkles, Brain, Upload, X, Send, MessageSquare, Edit3, Plus } from 'lucide-react';
+import { Download, FileText, Loader2, Sparkles, Brain, Upload, X, Send, MessageSquare, Plus } from 'lucide-react';
 import { exportToPDF, exportToWord } from '@/lib/document-utils';
 
 
@@ -31,6 +31,7 @@ export default function AIGenerator() {
   const [chatMessages, setChatMessages] = useState<{role: 'user' | 'assistant', content: string}[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [isChatting, setIsChatting] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showChat, setShowChat] = useState(false);
 
   const getUsage = () => {
@@ -139,6 +140,7 @@ export default function AIGenerator() {
       if (data.updatedContent) {
         setGeneratedContent(data.updatedContent);
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setChatMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
     } finally {
@@ -191,6 +193,7 @@ export default function AIGenerator() {
               <Brain className="h-6 w-6 text-purple-400" />
               <span className="text-white font-semibold text-lg">AsHelp AI</span>
             </div>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a href="/" className="text-white hover:text-purple-400 transition-colors">
               ← Back to Home
             </a>
@@ -232,7 +235,7 @@ export default function AIGenerator() {
                     onClick={() => setStatusMessage(null)}
                     className="text-white/60 hover:text-white"
                   >
-                    ×
+                    ├ù
                   </button>
                 </div>
               </div>
@@ -484,7 +487,7 @@ export default function AIGenerator() {
                           <div className="text-center text-white/60 py-8">
                             <MessageSquare className="mx-auto h-8 w-8 mb-2 opacity-50" />
                             <p className="text-sm">Ask me to modify your assignment!</p>
-                            <p className="text-xs mt-1 opacity-75">Try: "Make it shorter" or "Add examples"</p>
+                            <p className="text-xs mt-1 opacity-75">Try: &ldquo;Make it shorter&rdquo; or &ldquo;Add examples&rdquo;</p>
                           </div>
                         ) : (
                           chatMessages.map((msg, idx) => (
@@ -538,3 +541,4 @@ export default function AIGenerator() {
     </div>
   );
 }
+
