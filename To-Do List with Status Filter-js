@@ -1,0 +1,26 @@
+import express from "express";
+const app = express();
+app.use(express.json());
+let todos = [];
+
+app.post("/todo", (req, res) => {
+  const todo = { id: todos.length + 1, text: req.body.text, done: false };
+  todos.push(todo);
+  res.status(201).json(todo);
+});
+
+app.get("/todo", (req, res) => {
+  const { status } = req.query;
+  if (status === "done") return res.json(todos.filter(t => t.done));
+  if (status === "pending") return res.json(todos.filter(t => !t.done));
+  res.json(todos);
+});
+
+app.patch("/todo/:id", (req, res) => {
+  const todo = todos.find(t => t.id === +req.params.id);
+  if (!todo) return res.status(404).json({ message: "Not found" });
+  todo.done = true;
+  res.json(todo);
+});
+
+app.listen(3006, () => console.log("Todo API on 3006"));
